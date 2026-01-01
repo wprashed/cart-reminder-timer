@@ -1,44 +1,45 @@
-/* Modern Interactive Timer Styles */
-.wcrt-timer {
+/**
+ * Cart Reminder Timer for WooCommerce - Frontend Styles
+ */
+
+.CRT-timer {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
-  font-weight: 600;
   color: #fff;
   text-align: center;
   font-size: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  animation: slideIn 0.4s ease-out;
+  animation: CRT-slideIn 0.4s ease-out;
   position: relative;
   overflow: hidden;
 }
 
-.wcrt-timer.danger {
+.CRT-timer.danger {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.wcrt-timer.warning {
+.CRT-timer.warning {
   background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
-  color: #333;
+  color: #1f2937;
 }
 
-.wcrt-timer.info {
+.CRT-timer.info {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.wcrt-timer.success {
+.CRT-timer.success {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: #333;
+  color: #1f2937;
 }
 
-/* Pulse animation for urgency */
-.wcrt-timer.critical {
-  animation: pulse 1s infinite, slideIn 0.4s ease-out;
+.CRT-timer.critical {
+  animation: CRT-pulse 1s infinite, CRT-slideIn 0.4s ease-out;
 }
 
-@keyframes slideIn {
+@keyframes CRT-slideIn {
   from {
     transform: translateY(-20px);
     opacity: 0;
@@ -49,7 +50,7 @@
   }
 }
 
-@keyframes pulse {
+@keyframes CRT-pulse {
   0%,
   100% {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -59,8 +60,7 @@
   }
 }
 
-/* Progress bar */
-.wcrt-progress-container {
+.CRT-progress-container {
   height: 4px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
@@ -68,7 +68,7 @@
   overflow: hidden;
 }
 
-.wcrt-progress-bar {
+.CRT-progress-bar {
   height: 100%;
   background: rgba(255, 255, 255, 0.8);
   width: 100%;
@@ -76,47 +76,50 @@
   border-radius: 4px;
 }
 
-/* Timer content */
-.wcrt-content {
+.CRT-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
-.wcrt-message {
+.CRT-message {
   flex: 1;
   text-align: center;
+  min-width: 200px;
+  font-weight: 500;
 }
 
-.wcrt-timer-value {
-  font-size: 24px;
+.CRT-timer-value {
+  font-size: 28px;
   font-weight: 700;
-  font-family: "Monaco", "Courier New", monospace;
+  font-family: "Courier New", monospace;
   display: inline-block;
-  min-width: 80px;
+  min-width: 100px;
+  letter-spacing: 1px;
 }
 
-/* Dismiss button */
-.wcrt-dismiss-btn {
-  background: rgba(255, 255, 255, 0.2);
+.CRT-dismiss-btn {
+  background: rgba(255, 255, 255, 0.25);
   color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: 8px 12px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 500;
   transition: all 0.3s ease;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.wcrt-dismiss-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+.CRT-dismiss-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
   transform: scale(1.05);
 }
 
-/* Reopen button */
-.wcrt-reopen-btn {
+.CRT-reopen-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -128,57 +131,64 @@
   height: 60px;
   font-size: 24px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
   z-index: 999;
   transition: all 0.3s ease;
   display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
-.wcrt-reopen-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+.CRT-reopen-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
 }
 
-.wcrt-reopen-btn.show {
-  display: block;
-  animation: slideIn 0.4s ease-out;
+.CRT-reopen-btn.show {
+  display: flex;
+  animation: CRT-slideIn 0.4s ease-out;
 }
 
-/* Responsive */
+.CRT-timer.expired {
+  animation: none;
+  opacity: 0.9;
+}
+
+.CRT-timer.expired .CRT-content {
+  color: #fff;
+}
+
 @media (max-width: 768px) {
-  .wcrt-timer {
+  .CRT-timer {
     padding: 12px;
     font-size: 14px;
   }
 
-  .wcrt-content {
+  .CRT-content {
     flex-direction: column;
     gap: 8px;
   }
 
-  .wcrt-timer-value {
-    font-size: 20px;
+  .CRT-message {
+    min-width: 100%;
+  }
+
+  .CRT-timer-value {
+    font-size: 24px;
     min-width: auto;
   }
 
-  .wcrt-dismiss-btn {
+  .CRT-dismiss-btn {
     width: 100%;
+    padding: 10px 12px;
   }
 
-  .wcrt-reopen-btn {
+  .CRT-reopen-btn {
     bottom: 10px;
     right: 10px;
     width: 50px;
     height: 50px;
     font-size: 20px;
   }
-}
-
-/* Expired state */
-.wcrt-timer.expired {
-  animation: none;
-}
-
-.wcrt-timer.expired .wcrt-content {
-  color: #fff;
 }
