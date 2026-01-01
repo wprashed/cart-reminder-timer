@@ -1,0 +1,141 @@
+/* Admin Settings Styling */
+.wcrt-admin-wrap {
+  max-width: 900px;
+}
+
+.wcrt-admin-wrap h1 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.wcrt-tabs {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wcrt-tab-buttons {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  background: #f9f9f9;
+}
+
+.wcrt-tab-btn {
+  padding: 15px 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s;
+  flex: 1;
+  text-align: center;
+}
+
+.wcrt-tab-btn:hover {
+  background: #f0f0f0;
+}
+
+.wcrt-tab-btn.active {
+  color: #667eea;
+  border-bottom: 3px solid #667eea;
+  background: #fff;
+  margin-bottom: -1px;
+}
+
+.wcrt-tab-content {
+  display: none;
+  padding: 30px;
+}
+
+.wcrt-tab-content.active {
+  display: block;
+}
+
+.wcrt-form-table {
+  width: 100%;
+}
+
+.wcrt-form-table th {
+  text-align: left;
+  padding: 15px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
+.wcrt-form-table td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.wcrt-form-table input[type="text"],
+.wcrt-form-table input[type="number"],
+.wcrt-form-table select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.wcrt-form-table input[type="text"]:focus,
+.wcrt-form-table input[type="number"]:focus,
+.wcrt-form-table select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.wcrt-form-table input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+.wcrt-info-box {
+  background: #e8f4f8;
+  border-left: 4px solid #667eea;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+.button-primary {
+  background: #667eea;
+  border: none;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.button-primary:hover {
+  background: #5568d3;
+}
+
+.updated {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 20px;
+  color: #155724;
+}
+
+@media (max-width: 768px) {
+  .wcrt-tab-buttons {
+    flex-wrap: wrap;
+  }
+
+  .wcrt-tab-btn {
+    flex: 0 1 50%;
+    padding: 12px;
+    font-size: 13px;
+  }
+}
