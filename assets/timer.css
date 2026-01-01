@@ -1,13 +1,13 @@
 .woo-cart-timer {
     background: #fff4e5;
-    border: 1px solid #ffcc80;
-    padding: 10px 14px;
-    margin-bottom: 15px;
+    border: 1px solid #ffb74d;
+    padding: 12px 14px;
+    margin-bottom: 16px;
     font-size: 14px;
     border-radius: 4px;
 }
 
 .woo-cart-timer strong {
-    color: #e53935;
+    color: #d32f2f;
     margin-left: 4px;
 }
