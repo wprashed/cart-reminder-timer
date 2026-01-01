@@ -1,12 +1,8 @@
 .wcrt-timer{
     background:#fff3cd;
-    border:1px solid #ffcc80;
-    padding:12px 14px;
-    margin-bottom:16px;
-    font-size:14px;
-    border-radius:4px;
-}
-.wcrt-timer strong{
-    color:#c62828;
-    margin-left:4px;
+    border:1px solid #ffeeba;
+    padding:10px;
+    margin-bottom:10px;
+    font-weight:bold;
+    color:#856404;
 }
