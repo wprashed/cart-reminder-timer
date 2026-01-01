@@ -1,10 +1,9 @@
-;(($) => {
-  let WCRT_DATA // Declare WCRT_DATA variable
+;((jQuery) => {
   let mounted = false
-  let remaining
-  const totalDuration = WCRT_DATA.duration
+  let remaining = 0
   let timerInterval = null
   let isDismissed = false
+  let totalDuration = 0
 
   function format(sec) {
     const m = Math.floor(sec / 60)
@@ -15,34 +14,60 @@
   function mount() {
     if (mounted) return
 
+    if (!window.WCRT_DATA) {
+      console.log("[v0] WCRT_DATA not loaded yet")
+      return
+    }
+
     let container = null
-    if (WCRT_DATA.show_on === "cart" || WCRT_DATA.show_on === "both") {
-      container = document.querySelector(".woocommerce-cart-form") || document.querySelector(".wc-block-cart")
+
+    if (window.WCRT_DATA.show_on === "cart" || window.WCRT_DATA.show_on === "both") {
+      container =
+        document.querySelector(".woocommerce-cart-form") ||
+        document.querySelector(".wc-block-cart") ||
+        document.querySelector(".woo-next-cart") ||
+        document.querySelector("[data-testid='cart-form']") ||
+        document.querySelector(".cart-wrapper")
     }
-    if (WCRT_DATA.show_on === "checkout" || WCRT_DATA.show_on === "both") {
-      container = container || document.querySelector(".wc-block-checkout")
+
+    if (window.WCRT_DATA.show_on === "checkout" || window.WCRT_DATA.show_on === "both") {
+      container =
+        container ||
+        document.querySelector(".wc-block-checkout") ||
+        document.querySelector(".checkout") ||
+        document.querySelector("[data-testid='checkout']") ||
+        document.querySelector(".woocommerce-checkout") ||
+        document.querySelector("form.checkout") ||
+        document.querySelector(".woo-next-checkout") ||
+        document.querySelector("[data-testid='checkout-form']") ||
+        document.querySelector(".checkout-form")
     }
-    if (!container) return
+
+    if (!container) {
+      console.log("[v0] No cart/checkout container found")
+      return
+    }
+
     if (container.querySelector(".wcrt-timer")) return
 
     const div = document.createElement("div")
-    div.className = "wcrt-timer " + WCRT_DATA.color_scheme
+    div.className = "wcrt-timer " + window.WCRT_DATA.color_scheme
     div.innerHTML = `
-            ${WCRT_DATA.show_progress ? '<div class="wcrt-progress-container"><div class="wcrt-progress-bar"></div></div>' : ""}
+            ${window.WCRT_DATA.show_progress ? '<div class="wcrt-progress-container"><div class="wcrt-progress-bar"></div></div>' : ""}
             <div class="wcrt-content">
-                <span class="wcrt-message">⏳ ${WCRT_DATA.messages[WCRT_DATA.variant][WCRT_DATA.loggedIn ? "user" : "guest"]}</span>
+                <span class="wcrt-message">⏳ ${window.WCRT_DATA.messages[window.WCRT_DATA.variant][window.WCRT_DATA.loggedIn ? "user" : "guest"]}</span>
                 <strong class="wcrt-timer-value"><span class="wcrt-time">00:00</span></strong>
-                ${WCRT_DATA.dismissable ? '<button type="button" class="wcrt-dismiss-btn">✕ Dismiss</button>' : ""}
+                ${window.WCRT_DATA.dismissable ? '<button type="button" class="wcrt-dismiss-btn">✕ Dismiss</button>' : ""}
             </div>
         `
 
-    if (WCRT_DATA.position === "top") {
+    if (window.WCRT_DATA.position === "top") {
       container.prepend(div)
     } else {
       container.appendChild(div)
     }
 
-    if (WCRT_DATA.dismissable) {
+    if (window.WCRT_DATA.dismissable) {
       const dismissBtn = div.querySelector(".wcrt-dismiss-btn")
       dismissBtn.addEventListener("click", () => {
         isDismissed = true
@@ -81,7 +106,7 @@
         progressBar.style.width = progress + "%"
       }
 
-      if (remaining === 60 && WCRT_DATA.enable_sound) {
+      if (remaining === 60 && window.WCRT_DATA.enable_sound) {
         playSound()
         timerDiv.classList.add("critical")
       }
@@ -114,37 +139,47 @@
   }
 
   function playSound() {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
-    const oscillator = audioContext.createOscillator()
-    const gainNode = audioContext.createGain()
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
 
-    oscillator.connect(gainNode)
-    gainNode.connect(audioContext.destination)
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
 
-    oscillator.frequency.value = 800
-    oscillator.type = "sine"
+      oscillator.frequency.value = 800
+      oscillator.type = "sine"
 
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5)
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5)
 
-    oscillator.start(audioContext.currentTime)
-    oscillator.stop(audioContext.currentTime + 0.5)
+      oscillator.start(audioContext.currentTime)
+      oscillator.stop(audioContext.currentTime + 0.5)
+    } catch (e) {
+      console.log("[v0] Audio context error:", e.message)
+    }
   }
 
-  $(document).ready(() => {
-    WCRT_DATA = window.WCRT_DATA // Assign WCRT_DATA from window object
-    if (localStorage.getItem("wcrt_dismissed")) {
-      isDismissed = true
+  jQuery(document).ready(() => {
+    if (window.WCRT_DATA) {
+      remaining = window.WCRT_DATA.remaining
+      totalDuration = window.WCRT_DATA.duration
+
+      if (localStorage.getItem("wcrt_dismissed")) {
+        isDismissed = true
+      }
+      mount()
+    } else {
+      console.log("[v0] WCRT_DATA not available on document ready")
     }
-    mount()
   })
 
-  $(document.body).on("updated_cart_totals wc_fragments_loaded added_to_cart removed_from_cart", () => {
-    if (!isDismissed) {
+  jQuery(document.body).on("updated_cart_totals wc_fragments_loaded added_to_cart removed_from_cart", () => {
+    if (!isDismissed && window.WCRT_DATA) {
       mounted = false
       clearInterval(timerInterval)
-      remaining = WCRT_DATA.remaining
+      remaining = window.WCRT_DATA.remaining
       mount()
     }
   })
-})(window.jQuery) // Use window.jQuery to ensure jQuery is declared
+})(window.jQuery || window.jQuery.noConflict())
