@@ -1,3 +1,7 @@
+/**
+ * Cart Reminder Timer for WooCommerce - Frontend Countdown
+ */
+
 ;((jQuery) => {
   let mounted = false
   let remaining = 0
@@ -5,140 +9,207 @@
   let isDismissed = false
   let totalDuration = 0
 
-  function format(sec) {
-    const m = Math.floor(sec / 60)
-    const s = sec % 60
-    return m + ":" + (s < 10 ? "0" : "") + s
+  /**
+   * Format seconds to MM:SS format
+   */
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return minutes + ":" + (secs < 10 ? "0" : "") + secs
   }
 
-  function mount() {
-    if (mounted) return
-
-    if (!window.WCRT_DATA) {
-      console.log("[v0] WCRT_DATA not loaded yet")
+  /**
+   * Mount timer into DOM
+   */
+  function mountTimer() {
+    if (mounted) {
       return
     }
 
-    let container = null
-
-    if (window.WCRT_DATA.show_on === "cart" || window.WCRT_DATA.show_on === "both") {
-      container =
-        document.querySelector(".woocommerce-cart-form") ||
-        document.querySelector(".wc-block-cart") ||
-        document.querySelector(".woo-next-cart") ||
-        document.querySelector("[data-testid='cart-form']") ||
-        document.querySelector(".cart-wrapper")
+    if (!window.CRT_DATA) {
+      return
     }
 
-    if (window.WCRT_DATA.show_on === "checkout" || window.WCRT_DATA.show_on === "both") {
-      container =
-        container ||
-        document.querySelector(".wc-block-checkout") ||
-        document.querySelector(".checkout") ||
-        document.querySelector("[data-testid='checkout']") ||
-        document.querySelector(".woocommerce-checkout") ||
-        document.querySelector("form.checkout") ||
-        document.querySelector(".woo-next-checkout") ||
-        document.querySelector("[data-testid='checkout-form']") ||
-        document.querySelector(".checkout-form")
-    }
+    const container = getCartCheckoutContainer()
 
     if (!container) {
-      console.log("[v0] No cart/checkout container found")
       return
     }
 
-    if (container.querySelector(".wcrt-timer")) return
+    if (container.querySelector(".CRT-timer")) {
+      return
+    }
 
-    const div = document.createElement("div")
-    div.className = "wcrt-timer " + window.WCRT_DATA.color_scheme
-    div.innerHTML = `
-            ${window.WCRT_DATA.show_progress ? '<div class="wcrt-progress-container"><div class="wcrt-progress-bar"></div></div>' : ""}
-            <div class="wcrt-content">
-                <span class="wcrt-message">⏳ ${window.WCRT_DATA.messages[window.WCRT_DATA.variant][window.WCRT_DATA.loggedIn ? "user" : "guest"]}</span>
-                <strong class="wcrt-timer-value"><span class="wcrt-time">00:00</span></strong>
-                ${window.WCRT_DATA.dismissable ? '<button type="button" class="wcrt-dismiss-btn">✕ Dismiss</button>' : ""}
-            </div>
-        `
-
-    if (window.WCRT_DATA.position === "top") {
-      container.prepend(div)
+    const timerElement = createTimerElement()
+    if (window.CRT_DATA.position === "top") {
+      container.prepend(timerElement)
     } else {
-      container.appendChild(div)
+      container.appendChild(timerElement)
     }
 
-    if (window.WCRT_DATA.dismissable) {
-      const dismissBtn = div.querySelector(".wcrt-dismiss-btn")
-      dismissBtn.addEventListener("click", () => {
-        isDismissed = true
-        div.style.display = "none"
-        createReopenButton()
-        localStorage.setItem("wcrt_dismissed", "1")
-      })
-    }
+    const progressBar = timerElement.querySelector(".CRT-progress-bar")
+    const timeSpan = timerElement.querySelector(".CRT-time")
 
-    const progressBar = div.querySelector(".wcrt-progress-bar")
-    const timeSpan = div.querySelector(".wcrt-time")
-
-    countdown(timeSpan, div, progressBar)
+    startCountdown(timeSpan, timerElement, progressBar)
     mounted = true
   }
 
-  function countdown(target, timerDiv, progressBar) {
+  /**
+   * Get cart or checkout container
+   */
+  function getCartCheckoutContainer() {
+    // Cart page containers
+    if (window.CRT_DATA.show_on === "cart" || window.CRT_DATA.show_on === "both") {
+      const cartContainers = [
+        ".woocommerce-cart-form",
+        ".wc-block-cart",
+        ".woo-next-cart",
+        '[data-testid="cart-form"]',
+        ".cart-wrapper",
+      ]
+
+      for (const selector of cartContainers) {
+        const element = document.querySelector(selector)
+        if (element) {
+          return element
+        }
+      }
+    }
+
+    // Checkout page containers
+    if (window.CRT_DATA.show_on === "checkout" || window.CRT_DATA.show_on === "both") {
+      const checkoutContainers = [
+        ".wc-block-checkout",
+        ".checkout",
+        '[data-testid="checkout"]',
+        ".woocommerce-checkout",
+        "form.checkout",
+        ".woo-next-checkout",
+        '[data-testid="checkout-form"]',
+        ".checkout-form",
+      ]
+
+      for (const selector of checkoutContainers) {
+        const element = document.querySelector(selector)
+        if (element) {
+          return element
+        }
+      }
+    }
+
+    return null
+  }
+
+  /**
+   * Create timer HTML element
+   */
+  function createTimerElement() {
+    const div = document.createElement("div")
+    div.className = "CRT-timer " + window.CRT_DATA.color_scheme
+
+    const html = `
+			${window.CRT_DATA.show_progress ? '<div class="CRT-progress-container"><div class="CRT-progress-bar"></div></div>' : ""}
+			<div class="CRT-content">
+				<span class="CRT-message">⏳ ${window.CRT_DATA.messages[window.CRT_DATA.variant][window.CRT_DATA.loggedIn ? "user" : "guest"]}</span>
+				<strong class="CRT-timer-value"><span class="CRT-time">00:00</span></strong>
+				${window.CRT_DATA.dismissable ? '<button type="button" class="CRT-dismiss-btn">✕ Dismiss</button>' : ""}
+			</div>
+		`
+
+    div.innerHTML = html
+
+    // Attach dismiss handler
+    if (window.CRT_DATA.dismissable) {
+      const dismissBtn = div.querySelector(".CRT-dismiss-btn")
+      dismissBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        isDismissed = true
+        div.style.display = "none"
+        createReopenButton()
+        localStorage.setItem("CRT_dismissed", "1")
+      })
+    }
+
+    return div
+  }
+
+  /**
+   * Start countdown timer
+   */
+  function startCountdown(targetSpan, timerDiv, progressBar) {
     function tick() {
       if (remaining <= 0) {
         timerDiv.innerHTML = "⚠️ Cart timer expired. Your items have been released."
         timerDiv.classList.add("expired")
         clearInterval(timerInterval)
 
-        if (localStorage.getItem("wcrt_dismissed")) {
-          localStorage.removeItem("wcrt_dismissed")
-          const reopenBtn = document.querySelector(".wcrt-reopen-btn")
-          if (reopenBtn) reopenBtn.style.display = "none"
+        if (localStorage.getItem("CRT_dismissed")) {
+          localStorage.removeItem("CRT_dismissed")
+          const reopenBtn = document.querySelector(".CRT-reopen-btn")
+          if (reopenBtn) {
+            reopenBtn.style.display = "none"
+          }
         }
         return
       }
 
-      target.textContent = format(remaining)
+      targetSpan.textContent = formatTime(remaining)
 
       if (progressBar) {
         const progress = (remaining / totalDuration) * 100
         progressBar.style.width = progress + "%"
       }
 
-      if (remaining === 60 && window.WCRT_DATA.enable_sound) {
-        playSound()
+      // Add critical class when 1 minute left
+      if (remaining === 60 && window.CRT_DATA.enable_sound) {
+        playAlertSound()
         timerDiv.classList.add("critical")
       }
 
       remaining--
       timerInterval = setTimeout(tick, 1000)
     }
+
     tick()
   }
 
+  /**
+   * Create reopen button for dismissed timer
+   */
   function createReopenButton() {
-    let reopenBtn = document.querySelector(".wcrt-reopen-btn")
-    if (!reopenBtn) {
-      reopenBtn = document.createElement("button")
-      reopenBtn.className = "wcrt-reopen-btn show"
-      reopenBtn.innerHTML = "⏳"
-      reopenBtn.type = "button"
-      reopenBtn.addEventListener("click", function () {
-        isDismissed = false
-        const timer = document.querySelector(".wcrt-timer")
-        if (timer) {
-          timer.style.display = "block"
-          this.classList.remove("show")
-          setTimeout(() => this.remove(), 400)
-        }
-        localStorage.removeItem("wcrt_dismissed")
-      })
-      document.body.appendChild(reopenBtn)
+    let reopenBtn = document.querySelector(".CRT-reopen-btn")
+
+    if (reopenBtn) {
+      reopenBtn.classList.add("show")
+      return
     }
+
+    reopenBtn = document.createElement("button")
+    reopenBtn.className = "CRT-reopen-btn show"
+    reopenBtn.innerHTML = "⏳"
+    reopenBtn.type = "button"
+
+    reopenBtn.addEventListener("click", function (e) {
+      e.preventDefault()
+      isDismissed = false
+      const timer = document.querySelector(".CRT-timer")
+      if (timer) {
+        timer.style.display = "block"
+        this.classList.remove("show")
+        setTimeout(() => {
+          reopenBtn.remove()
+        }, 400)
+      }
+      localStorage.removeItem("CRT_dismissed")
+    })
+
+    document.body.appendChild(reopenBtn)
   }
 
-  function playSound() {
+  /**
+   * Play alert sound using Web Audio API
+   */
+  function playAlertSound() {
     try {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)()
       const oscillator = audioContext.createOscillator()
@@ -156,30 +227,35 @@
       oscillator.start(audioContext.currentTime)
       oscillator.stop(audioContext.currentTime + 0.5)
     } catch (e) {
-      console.log("[v0] Audio context error:", e.message)
+      // Silent fail if Web Audio API not available
     }
   }
 
-  jQuery(document).ready(() => {
-    if (window.WCRT_DATA) {
-      remaining = window.WCRT_DATA.remaining
-      totalDuration = window.WCRT_DATA.duration
+  /**
+   * Initialize on document ready
+   */
+  jQuery(() => {
+    if (window.CRT_DATA) {
+      remaining = window.CRT_DATA.remaining
+      totalDuration = window.CRT_DATA.duration
 
-      if (localStorage.getItem("wcrt_dismissed")) {
+      if (localStorage.getItem("CRT_dismissed")) {
         isDismissed = true
       }
-      mount()
-    } else {
-      console.log("[v0] WCRT_DATA not available on document ready")
+
+      mountTimer()
     }
   })
 
+  /**
+   * Remount timer on cart update
+   */
   jQuery(document.body).on("updated_cart_totals wc_fragments_loaded added_to_cart removed_from_cart", () => {
-    if (!isDismissed && window.WCRT_DATA) {
+    if (!isDismissed && window.CRT_DATA) {
       mounted = false
       clearInterval(timerInterval)
-      remaining = window.WCRT_DATA.remaining
-      mount()
+      remaining = window.CRT_DATA.remaining
+      mountTimer()
     }
   })
 })(window.jQuery || window.jQuery.noConflict())
