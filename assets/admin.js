@@ -37,8 +37,8 @@
    * Update coupon unit display based on type
    */
   function initCouponUnitToggle() {
-    const couponTypeSelect = document.getElementById("CRT_coupon_type")
-    const couponUnit = document.getElementById("CRT_coupon_unit")
+    const couponTypeSelect = document.getElementById("crt_coupon_type")
+    const couponUnit = document.getElementById("crt_coupon_unit")
 
     if (!couponTypeSelect || !couponUnit) {
       return

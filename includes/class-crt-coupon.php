@@ -1,6 +1,6 @@
 <?php
 /**
- * CRT_Coupon class - Handle coupon creation and application.
+ * crt_Coupon class - Handle coupon creation and application.
  *
  * @package Cart_Reminder_Timer
  */
@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Coupon management class.
  */
-class CRT_Coupon {
+class crt_Coupon {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var CRT_Coupon|null
+	 * @var crt_Coupon|null
 	 */
 	private static $instance = null;
 
@@ -31,7 +31,7 @@ class CRT_Coupon {
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return CRT_Coupon
+	 * @return crt_Coupon
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -94,7 +94,7 @@ class CRT_Coupon {
 			return;
 		}
 
-		if ( ! CRT_get_option( 'coupon' ) ) {
+		if ( ! crt_get_option( 'coupon' ) ) {
 			return;
 		}
 
@@ -102,7 +102,7 @@ class CRT_Coupon {
 			return;
 		}
 
-		$coupon_cache_key = 'CRT_coupon_obj_' . CRT_VERSION;
+		$coupon_cache_key = 'crt_coupon_obj_' . crt_VERSION;
 		$coupon = wp_cache_get( $coupon_cache_key );
 
 		if ( false === $coupon ) {
@@ -114,9 +114,9 @@ class CRT_Coupon {
 			return;
 		}
 
-		$discount_type = sanitize_text_field( CRT_get_option( 'coupon_type', 'percent' ) );
-		$discount_amount = (float) CRT_get_option( 'coupon_amount', 10 );
-		$usage_limit = (int) CRT_get_option( 'max_usage', 1 );
+		$discount_type = sanitize_text_field( crt_get_option( 'coupon_type', 'percent' ) );
+		$discount_amount = (float) crt_get_option( 'coupon_amount', 10 );
+		$usage_limit = (int) crt_get_option( 'max_usage', 1 );
 
 		if ( $coupon->get_discount_type() !== $discount_type ||
 			 abs( (float) $coupon->get_amount() - $discount_amount ) > 0.01 ||
@@ -132,12 +132,12 @@ class CRT_Coupon {
 		$code = $coupon->get_code();
 
 		// Apply coupon if not already applied.
-		if ( ! WC()->session->get( 'CRT_coupon_applied' ) ) {
+		if ( ! WC()->session->get( 'crt_coupon_applied' ) ) {
 			if ( $cart->has_discount( $code ) ) {
 				$cart->remove_coupon( $code );
 			}
 			$cart->apply_coupon( $code );
-			WC()->session->set( 'CRT_coupon_applied', true );
+			WC()->session->set( 'crt_coupon_applied', true );
 		}
 	}
 
@@ -152,13 +152,13 @@ class CRT_Coupon {
 		}
 
 		if ( WC()->cart->is_empty() ) {
-			WC()->session->__unset( 'CRT_start' );
-			WC()->session->__unset( 'CRT_variant' );
-			WC()->session->__unset( 'CRT_coupon_applied' );
+			WC()->session->__unset( 'crt_start' );
+			WC()->session->__unset( 'crt_variant' );
+			WC()->session->__unset( 'crt_coupon_applied' );
 		} else {
-			WC()->session->set( 'CRT_start', time() );
-			WC()->session->set( 'CRT_variant', rand( 0, 1 ) ? 'A' : 'B' );
-			WC()->session->__unset( 'CRT_coupon_applied' );
+			WC()->session->set( 'crt_start', time() );
+			WC()->session->set( 'crt_variant', rand( 0, 1 ) ? 'A' : 'B' );
+			WC()->session->__unset( 'crt_coupon_applied' );
 		}
 	}
 }

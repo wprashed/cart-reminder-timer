@@ -79,13 +79,13 @@ The plugin provides several filters for developers:
 
 ```php
 // Modify timer remaining time
-apply_filters( 'CRT_timer_remaining', $remaining_seconds );
+apply_filters( 'crt_timer_remaining', $remaining_seconds );
 
 // Customize coupon settings
-apply_filters( 'CRT_coupon_settings', $settings );
+apply_filters( 'crt_coupon_settings', $settings );
 
 // Modify email reminder content
-apply_filters( 'CRT_email_reminder_content', $content, $user );
+apply_filters( 'crt_email_reminder_content', $content, $user );
 ```
 
 ## Performance

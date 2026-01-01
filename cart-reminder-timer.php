@@ -26,32 +26,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Define plugin constants.
  */
-define( 'CRT_VERSION', '6.0' );
-define( 'CRT_PLUGIN_FILE', __FILE__ );
-define( 'CRT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'CRT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'CRT_TEXT_DOMAIN', 'cart-reminder-timer' );
+define( 'crt_VERSION', '6.0' );
+define( 'crt_PLUGIN_FILE', __FILE__ );
+define( 'crt_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'crt_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'crt_TEXT_DOMAIN', 'cart-reminder-timer' );
 
 /**
  * Load plugin text domain for translations.
  *
  * @return void
  */
-function CRT_load_plugin_textdomain() {
+function crt_load_plugin_textdomain() {
 	load_plugin_textdomain(
-		CRT_TEXT_DOMAIN,
+		crt_TEXT_DOMAIN,
 		false,
 		dirname( plugin_basename( __FILE__ ) ) . '/languages'
 	);
 }
-add_action( 'plugins_loaded', 'CRT_load_plugin_textdomain' );
+add_action( 'plugins_loaded', 'crt_load_plugin_textdomain' );
 
 /**
  * Check if WooCommerce is active.
  *
  * @return bool
  */
-function CRT_is_woocommerce_active() {
+function crt_is_woocommerce_active() {
 	return class_exists( 'WC_Cart' ) && function_exists( 'WC' );
 }
 
@@ -60,33 +60,33 @@ function CRT_is_woocommerce_active() {
  *
  * @return void
  */
-function CRT_init_plugin() {
-	if ( ! CRT_is_woocommerce_active() ) {
-		add_action( 'admin_notices', 'CRT_woocommerce_required_notice' );
+function crt_init_plugin() {
+	if ( ! crt_is_woocommerce_active() ) {
+		add_action( 'admin_notices', 'crt_woocommerce_required_notice' );
 		return;
 	}
 
-	require_once CRT_PLUGIN_DIR . 'includes/class-crt-admin.php';
-	require_once CRT_PLUGIN_DIR . 'includes/class-crt-timer.php';
-	require_once CRT_PLUGIN_DIR . 'includes/class-crt-coupon.php';
-	require_once CRT_PLUGIN_DIR . 'includes/class-crt-email.php';
-	require_once CRT_PLUGIN_DIR . 'includes/class-crt-tracking.php';
+	require_once crt_PLUGIN_DIR . 'includes/class-crt-admin.php';
+	require_once crt_PLUGIN_DIR . 'includes/class-crt-timer.php';
+	require_once crt_PLUGIN_DIR . 'includes/class-crt-coupon.php';
+	require_once crt_PLUGIN_DIR . 'includes/class-crt-email.php';
+	require_once crt_PLUGIN_DIR . 'includes/class-crt-tracking.php';
 
 	// Initialize all classes.
-	CRT_Admin::get_instance();
-	CRT_Timer::get_instance();
-	CRT_Coupon::get_instance();
-	CRT_Email::get_instance();
-	CRT_Tracking::get_instance();
+	crt_Admin::get_instance();
+	crt_Timer::get_instance();
+	crt_Coupon::get_instance();
+	crt_Email::get_instance();
+	crt_Tracking::get_instance();
 }
-add_action( 'woocommerce_loaded', 'CRT_init_plugin' );
+add_action( 'woocommerce_loaded', 'crt_init_plugin' );
 
 /**
  * Display notice if WooCommerce is not active.
  *
  * @return void
  */
-function CRT_woocommerce_required_notice() {
+function crt_woocommerce_required_notice() {
 	?>
 	<div class="notice notice-error">
 		<p>
@@ -94,7 +94,7 @@ function CRT_woocommerce_required_notice() {
 			echo wp_kses_post(
 				sprintf(
 					/* translators: %s: WooCommerce plugin name */
-					__( '<strong>Cart Reminder Timer</strong> requires %s to be installed and activated.', CRT_TEXT_DOMAIN ),
+					__( '<strong>Cart Reminder Timer</strong> requires %s to be installed and activated.', crt_TEXT_DOMAIN ),
 					'<strong>WooCommerce</strong>'
 				)
 			);
@@ -109,61 +109,61 @@ function CRT_woocommerce_required_notice() {
  *
  * @return void
  */
-function CRT_enqueue_frontend_assets() {
-	if ( ! CRT_is_woocommerce_active() ) {
+function crt_enqueue_frontend_assets() {
+	if ( ! crt_is_woocommerce_active() ) {
 		return;
 	}
 
 	wp_enqueue_script(
 		'CRT-timer',
-		CRT_PLUGIN_URL . 'assets/timer.js',
+		crt_PLUGIN_URL . 'assets/timer.js',
 		array( 'jquery' ),
-		CRT_VERSION,
+		crt_VERSION,
 		true
 	);
 
 	wp_enqueue_style(
 		'CRT-timer-css',
-		CRT_PLUGIN_URL . 'assets/timer.css',
+		crt_PLUGIN_URL . 'assets/timer.css',
 		array(),
-		CRT_VERSION
+		crt_VERSION
 	);
 }
-add_action( 'wp_enqueue_scripts', 'CRT_enqueue_frontend_assets' );
+add_action( 'wp_enqueue_scripts', 'crt_enqueue_frontend_assets' );
 
 /**
  * Create database tables and default coupon on plugin activation.
  *
  * @return void
  */
-function CRT_activate_plugin() {
-	if ( ! CRT_is_woocommerce_active() ) {
-		wp_die( esc_html__( 'WooCommerce must be active to use Cart Reminder Timer.', CRT_TEXT_DOMAIN ) );
+function crt_activate_plugin() {
+	if ( ! crt_is_woocommerce_active() ) {
+		wp_die( esc_html__( 'WooCommerce must be active to use Cart Reminder Timer.', crt_TEXT_DOMAIN ) );
 	}
 
-	require_once CRT_PLUGIN_DIR . 'includes/class-crt-tracking.php';
-	CRT_Tracking::create_tables();
+	require_once crt_PLUGIN_DIR . 'includes/class-crt-tracking.php';
+	crt_Tracking::create_tables();
 
 	if ( class_exists( 'WC_Coupon' ) ) {
-		require_once CRT_PLUGIN_DIR . 'includes/class-crt-coupon.php';
-		CRT_Coupon::create_or_get_coupon();
+		require_once crt_PLUGIN_DIR . 'includes/class-crt-coupon.php';
+		crt_Coupon::create_or_get_coupon();
 	}
 
 	flush_rewrite_rules();
 	wp_cache_flush();
 }
-register_activation_hook( CRT_PLUGIN_FILE, 'CRT_activate_plugin' );
+register_activation_hook( crt_PLUGIN_FILE, 'crt_activate_plugin' );
 
 /**
  * Cleanup on plugin deactivation.
  *
  * @return void
  */
-function CRT_deactivate_plugin() {
-	wp_clear_scheduled_hook( 'CRT_send_email_reminders' );
+function crt_deactivate_plugin() {
+	wp_clear_scheduled_hook( 'crt_send_email_reminders' );
 	flush_rewrite_rules();
 }
-register_deactivation_hook( CRT_PLUGIN_FILE, 'CRT_deactivate_plugin' );
+register_deactivation_hook( crt_PLUGIN_FILE, 'crt_deactivate_plugin' );
 
 /**
  * Get plugin option with default value.
@@ -172,8 +172,8 @@ register_deactivation_hook( CRT_PLUGIN_FILE, 'CRT_deactivate_plugin' );
  * @param mixed  $default Default value.
  * @return mixed
  */
-function CRT_get_option( $option, $default = false ) {
-	return get_option( 'CRT_' . $option, $default );
+function crt_get_option( $option, $default = false ) {
+	return get_option( 'crt_' . $option, $default );
 }
 
 /**
@@ -183,6 +183,6 @@ function CRT_get_option( $option, $default = false ) {
  * @param mixed  $value Option value.
  * @return bool
  */
-function CRT_update_option( $option, $value ) {
-	return update_option( 'CRT_' . $option, $value );
+function crt_update_option( $option, $value ) {
+	return update_option( 'crt_' . $option, $value );
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * CRT_Tracking class - Track abandoned carts and conversions.
+ * crt_Tracking class - Track abandoned carts and conversions.
  *
  * @package Cart_Reminder_Timer
  */
@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Cart tracking class.
  */
-class CRT_Tracking {
+class crt_Tracking {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var CRT_Tracking|null
+	 * @var crt_Tracking|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return CRT_Tracking
+	 * @return crt_Tracking
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -49,7 +49,7 @@ class CRT_Tracking {
 	public static function create_tables() {
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = $wpdb->prefix . 'CRT_abandoned_carts';
+		$table_name = $wpdb->prefix . 'crt_abandoned_carts';
 
 		$sql = $wpdb->prepare(
 			"CREATE TABLE IF NOT EXISTS {$table_name} (
@@ -85,25 +85,25 @@ class CRT_Tracking {
 		}
 
 		// Skip if already tracked in this session.
-		if ( WC()->session->get( 'CRT_tracked' ) ) {
+		if ( WC()->session->get( 'crt_tracked' ) ) {
 			return;
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'CRT_abandoned_carts';
+		$table = $wpdb->prefix . 'crt_abandoned_carts';
 
 		$wpdb->insert(
 			$table,
 			array(
 				'user_id'    => get_current_user_id(),
 				'cart_value' => WC()->cart->get_subtotal(),
-				'variant'    => WC()->session->get( 'CRT_variant' ) ?: 'A',
+				'variant'    => WC()->session->get( 'crt_variant' ) ?: 'A',
 				'created_at' => current_time( 'mysql' ),
 			),
 			array( '%d', '%f', '%s', '%s' )
 		);
 
-		WC()->session->set( 'CRT_tracked', 1 );
+		WC()->session->set( 'crt_tracked', 1 );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class CRT_Tracking {
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'CRT_abandoned_carts';
+		$table = $wpdb->prefix . 'crt_abandoned_carts';
 
 		$wpdb->update(
 			$table,
