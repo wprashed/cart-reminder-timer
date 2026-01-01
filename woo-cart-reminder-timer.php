@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Woo Cart Reminder Timer
- * Description: Adds an urgency-based countdown timer to cart and mini-cart.
- * Version: 1.1.0
+ * Plugin Name: Woo Cart Reminder Timer (Classic + Blocks)
+ * Description: Countdown urgency timer for WooCommerce cart & checkout (Classic and Blocks).
+ * Version: 3.0.0
  * Author: Rashed Hossain
  */
 
@@ -10,156 +10,106 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Woo_Cart_Reminder_Timer {
 
-    public function __construct() {
-        add_action( 'woocommerce_add_to_cart', [ $this, 'set_cart_timer' ] );
-        add_action( 'woocommerce_cart_is_empty', [ $this, 'clear_cart_timer' ] );
+    const DEFAULT_MINUTES = 15;
 
-        add_action( 'woocommerce_before_cart', [ $this, 'render_timer' ] );
-        add_action( 'woocommerce_widget_shopping_cart_before_buttons', [ $this, 'render_timer' ] );
+    public function __construct() {
+        add_action( 'woocommerce_add_to_cart', [ $this, 'start_timer' ] );
+        add_action( 'woocommerce_cart_is_empty', [ $this, 'clear_timer' ] );
+        add_action( 'wp', [ $this, 'maybe_clear_cart' ] );
+
+        /* Classic cart placement */
+        add_action( 'woocommerce_before_cart', [ $this, 'render_placeholder' ] );
+        add_action( 'woocommerce_before_checkout_form', [ $this, 'render_placeholder' ] );
+
+        /* Universal fallback (Blocks) */
+        add_action( 'wp_footer', [ $this, 'render_placeholder' ], 5 );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
-        add_action( 'admin_menu', [ $this, 'settings_page' ] );
-        add_action( 'admin_init', [ $this, 'register_settings' ] );
-
-        add_action( 'wp', [ $this, 'maybe_clear_cart' ] );
-    }
-
-    /* -----------------------------
-     * SETTINGS
-     * ---------------------------- */
-
-    public function settings_page() {
-        add_options_page(
-            'Cart Reminder Timer',
-            'Cart Reminder Timer',
-            'manage_options',
-            'cart-reminder-timer',
-            [ $this, 'settings_html' ]
-        );
-    }
-
-    public function register_settings() {
-        register_setting( 'woo_cart_timer', 'woo_cart_timer_duration' );
-        register_setting( 'woo_cart_timer', 'woo_cart_timer_autoclear' );
-    }
-
-    public function settings_html() {
-        ?>
-        <div class="wrap">
-            <h1>Cart Reminder Timer</h1>
-            <form method="post" action="options.php">
-                <?php settings_fields( 'woo_cart_timer' ); ?>
-                <table class="form-table">
-                    <tr>
-                        <th>Timer Duration (minutes)</th>
-                        <td>
-                            <input type="number" min="1"
-                                   name="woo_cart_timer_duration"
-                                   value="<?php echo esc_attr( get_option( 'woo_cart_timer_duration', 15 ) ); ?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Auto-clear Cart After Expiry</th>
-                        <td>
-                            <input type="checkbox"
-                                   name="woo_cart_timer_autoclear"
-                                   value="1"
-                                   <?php checked( get_option( 'woo_cart_timer_autoclear' ), 1 ); ?>>
-                        </td>
-                    </tr>
-                </table>
-                <?php submit_button(); ?>
-            </form>
-        </div>
-        <?php
     }
 
     /* -----------------------------
      * TIMER LOGIC
      * ---------------------------- */
 
-    public function set_cart_timer() {
-        if ( ! WC()->session->get( 'woo_cart_timer_start' ) ) {
-            WC()->session->set( 'woo_cart_timer_start', time() );
-
-            // A/B message assignment
-            WC()->session->set(
-                'woo_cart_timer_variant',
-                rand( 0, 1 ) ? 'A' : 'B'
-            );
+    public function start_timer() {
+        if ( ! WC()->session->get( 'wcrt_start' ) ) {
+            WC()->session->set( 'wcrt_start', time() );
+            WC()->session->set( 'wcrt_variant', rand( 0, 1 ) ? 'A' : 'B' );
         }
     }
 
-    public function clear_cart_timer() {
-        WC()->session->__unset( 'woo_cart_timer_start' );
-        WC()->session->__unset( 'woo_cart_timer_variant' );
+    public function clear_timer() {
+        WC()->session->__unset( 'wcrt_start' );
+        WC()->session->__unset( 'wcrt_variant' );
     }
 
-    public function remaining_time() {
-        $start = WC()->session->get( 'woo_cart_timer_start' );
+    private function remaining() {
+        $start = WC()->session->get( 'wcrt_start' );
         if ( ! $start ) return 0;
-
-        $duration = (int) get_option( 'woo_cart_timer_duration', 15 ) * 60;
-        return max( 0, $duration - ( time() - $start ) );
+        return max( 0, self::DEFAULT_MINUTES * 60 - ( time() - $start ) );
     }
 
     public function maybe_clear_cart() {
-        if ( ! get_option( 'woo_cart_timer_autoclear' ) ) return;
-        if ( $this->remaining_time() > 0 ) return;
-
-        if ( ! WC()->cart->is_empty() ) {
+        if ( $this->remaining() > 0 ) return;
+        if ( WC()->cart && ! WC()->cart->is_empty() ) {
             WC()->cart->empty_cart();
-            $this->clear_cart_timer();
+            $this->clear_timer();
         }
     }
 
     /* -----------------------------
-     * UI RENDER
+     * PLACEHOLDER
      * ---------------------------- */
 
-    public function render_timer() {
-        if ( WC()->cart->is_empty() ) return;
+    public function render_placeholder() {
+        if ( ! WC()->cart || WC()->cart->is_empty() ) return;
+        if ( did_action( 'wcrt_placeholder_rendered' ) ) return;
 
-        $remaining = $this->remaining_time();
-        if ( $remaining <= 0 ) return;
+        do_action( 'wcrt_placeholder_rendered' );
 
-        $variant = WC()->session->get( 'woo_cart_timer_variant', 'A' );
-        $is_logged_in = is_user_logged_in();
-
-        $messages = [
-            'A' => $is_logged_in
-                ? 'Your exclusive price is reserved for'
-                : 'Prices are reserved for',
-            'B' => $is_logged_in
-                ? 'Complete checkout before this deal expires in'
-                : 'Hurry! Cart prices expire in'
-        ];
-        ?>
-        <div class="woo-cart-timer"
-             data-remaining="<?php echo esc_attr( $remaining ); ?>">
-            ⏳ <?php echo esc_html( $messages[ $variant ] ); ?>
-            <strong><span class="woo-cart-timer-countdown"></span></strong>
-        </div>
-        <?php
+        echo '<div id="wcrt-placeholder" data-wcrt="1"></div>';
     }
 
+    /* -----------------------------
+     * ASSETS
+     * ---------------------------- */
+
     public function enqueue_assets() {
-        if ( ! is_cart() && ! is_checkout() ) return;
+        if ( ! WC()->cart || WC()->cart->is_empty() ) return;
+
+        $remaining = $this->remaining();
+        if ( $remaining <= 0 ) return;
 
         wp_enqueue_script(
-            'woo-cart-timer',
+            'wcrt-timer',
             plugin_dir_url( __FILE__ ) . 'assets/timer.js',
-            [],
-            '1.1',
+            [ 'jquery', 'wp-data' ],
+            '3.0.0',
             true
         );
 
         wp_enqueue_style(
-            'woo-cart-timer',
+            'wcrt-style',
             plugin_dir_url( __FILE__ ) . 'assets/timer.css',
             [],
-            '1.1'
+            '3.0.0'
         );
+
+        wp_localize_script( 'wcrt-timer', 'WCRT_DATA', [
+            'remaining' => $remaining,
+            'variant'   => WC()->session->get( 'wcrt_variant', 'A' ),
+            'loggedIn'  => is_user_logged_in(),
+            'messages'  => [
+                'A' => [
+                    'guest' => 'Prices are reserved for',
+                    'user'  => 'Your exclusive price is reserved for'
+                ],
+                'B' => [
+                    'guest' => 'Hurry! Cart expires in',
+                    'user'  => 'Complete checkout within'
+                ]
+            ]
+        ] );
     }
 }
 
