@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Woo Cart Reminder Timer
- * Description: Countdown urgency timer for WooCommerce cart & checkout (Classic + Blocks). Admin panel for messages & duration, expiry → coupon, A/B tracking.
- * Version: 3.0.0
+ * Description: Countdown urgency timer for WooCommerce cart & checkout (Classic + Blocks). Admin panel, expiry → coupon, A/B tracking.
+ * Version: 4.0.0
  * Author: Rashed Hossain
  */
 
@@ -11,6 +11,23 @@ if(!defined('ABSPATH')) exit;
 // Load admin settings and coupon handler
 require_once plugin_dir_path(__FILE__) . 'admin/settings.php';
 require_once plugin_dir_path(__FILE__) . 'includes/coupon-handler.php';
+
+register_activation_hook(__FILE__, function(){
+    $code = 'CRT-TIMER';
+    if(!post_exists($code,'','shop_coupon')){
+        $post_id = wp_insert_post([
+            'post_title'=>$code,
+            'post_content'=>'Cart Reminder Timer coupon',
+            'post_status'=>'publish',
+            'post_type'=>'shop_coupon'
+        ]);
+        update_post_meta($post_id,'discount_type','percent');
+        update_post_meta($post_id,'coupon_amount', get_option('wcrt_coupon_amount',10));
+        update_post_meta($post_id,'individual_use','yes');
+        update_post_meta($post_id,'usage_limit',1);
+        update_post_meta($post_id,'apply_before_tax','yes');
+    }
+});
 
 class Woo_Cart_Reminder_Timer {
 
@@ -25,9 +42,7 @@ class Woo_Cart_Reminder_Timer {
         add_action('woocommerce_before_cart', [$this,'render_placeholder']);
         add_action('woocommerce_before_checkout_form', [$this,'render_placeholder']);
 
-        // Fallback for Blocks
-        add_action('wp_footer', [$this,'render_placeholder'], 5);
-
+        // Assets
         add_action('wp_enqueue_scripts', [$this,'enqueue_assets']);
 
         // Track A/B variant per order
@@ -44,12 +59,15 @@ class Woo_Cart_Reminder_Timer {
     }
 
     public function clear_timer(){
-        WC()->session->__unset('wcrt_start');
-        WC()->session->__unset('wcrt_variant');
-        WC()->session->__unset('wcrt_expired');
+        if( WC()->session ){
+            WC()->session->__unset('wcrt_start');
+            WC()->session->__unset('wcrt_variant');
+            WC()->session->__unset('wcrt_expired');
+        }
     }
 
     private function remaining(){
+        if( !WC()->cart || !WC()->session ) return 0; // safe check
         $start = WC()->session->get('wcrt_start');
         if(!$start) return 0;
         $duration = get_option('wcrt_duration',self::DEFAULT_MINUTES)*60;
@@ -57,12 +75,15 @@ class Woo_Cart_Reminder_Timer {
     }
 
     public function maybe_clear_cart(){
-        if($this->remaining()>0) return;
-        if(WC()->cart && !WC()->cart->is_empty()){
-            if(get_option('wcrt_autoclear',0)){
-                WC()->cart->empty_cart();
-                $this->clear_timer();
-            }
+        // Only front-end and cart exists
+        if( is_admin() || !WC()->cart || WC()->cart->is_empty() ) return;
+
+        $remaining = $this->remaining();
+        if($remaining > 0) return;
+
+        if(get_option('wcrt_autoclear',0)){
+            WC()->cart->empty_cart();
+            $this->clear_timer();
         }
     }
 
@@ -70,24 +91,22 @@ class Woo_Cart_Reminder_Timer {
 
     public function render_placeholder(){
         if(!WC()->cart || WC()->cart->is_empty()) return;
-        if(did_action('wcrt_placeholder_rendered')) return;
-        do_action('wcrt_placeholder_rendered');
-        echo '<div id="wcrt-placeholder" data-wcrt="1"></div>';
+        echo '<div id="wcrt-placeholder"></div>';
     }
 
     /* ---------------- ASSETS ---------------- */
 
     public function enqueue_assets(){
-        if(!WC()->cart || WC()->cart->is_empty()) return;
+        if( is_admin() || !WC()->cart || WC()->cart->is_empty() ) return;
 
         $remaining = $this->remaining();
-        if($remaining<=0) return;
+        if($remaining <= 0) return;
 
         wp_enqueue_script(
             'wcrt-timer',
             plugin_dir_url(__FILE__).'assets/timer.js',
             ['jquery','wp-data'],
-            '3.0.0',
+            '4.0.0',
             true
         );
 
@@ -95,7 +114,7 @@ class Woo_Cart_Reminder_Timer {
             'wcrt-style',
             plugin_dir_url(__FILE__).'assets/timer.css',
             [],
-            '3.0.0'
+            '4.0.0'
         );
 
         wp_localize_script('wcrt-timer','WCRT_DATA',[
