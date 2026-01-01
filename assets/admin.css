@@ -15,6 +15,7 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .wcrt-tab-buttons {
@@ -33,30 +34,42 @@
   transition: all 0.3s;
   flex: 1;
   text-align: center;
+  border-bottom: 3px solid transparent;
 }
 
 .wcrt-tab-btn:hover {
   background: #f0f0f0;
+  color: #667eea;
 }
 
 .wcrt-tab-btn.active {
   color: #667eea;
-  border-bottom: 3px solid #667eea;
+  border-bottom-color: #667eea;
   background: #fff;
-  margin-bottom: -1px;
 }
 
 .wcrt-tab-content {
   display: none;
   padding: 30px;
+  animation: fadeIn 0.3s ease-in;
 }
 
 .wcrt-tab-content.active {
   display: block;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .wcrt-form-table {
   width: 100%;
+  border-collapse: collapse;
 }
 
 .wcrt-form-table th {
@@ -65,6 +78,7 @@
   font-weight: 600;
   color: #333;
   border-bottom: 1px solid #eee;
+  background: #f9f9f9;
 }
 
 .wcrt-form-table td {
@@ -76,10 +90,17 @@
 .wcrt-form-table input[type="number"],
 .wcrt-form-table select {
   width: 100%;
-  padding: 8px 12px;
+  max-width: 400px;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+  box-sizing: border-box;
+}
+
+.wcrt-form-table input[type="text"].large-text,
+.wcrt-form-table input[type="text"]:not(.large-text) {
+  max-width: 100%;
 }
 
 .wcrt-form-table input[type="text"]:focus,
@@ -93,6 +114,11 @@
 .wcrt-form-table input[type="checkbox"] {
   width: auto;
   margin-right: 8px;
+  cursor: pointer;
+}
+
+.wcrt-form-table label {
+  cursor: pointer;
 }
 
 .wcrt-info-box {
@@ -104,6 +130,11 @@
   color: #333;
 }
 
+.wcrt-form p {
+  margin-top: 30px;
+  margin-bottom: 0;
+}
+
 .button-primary {
   background: #667eea;
   border: none;
@@ -113,6 +144,7 @@
   cursor: pointer;
   font-size: 16px;
   transition: all 0.3s;
+  font-weight: 600;
 }
 
 .button-primary:hover {
@@ -129,6 +161,10 @@
 }
 
 @media (max-width: 768px) {
+  .wcrt-admin-wrap {
+    max-width: 100%;
+  }
+
   .wcrt-tab-buttons {
     flex-wrap: wrap;
   }
@@ -137,5 +173,15 @@
     flex: 0 1 50%;
     padding: 12px;
     font-size: 13px;
+  }
+
+  .wcrt-tab-content {
+    padding: 15px;
+  }
+
+  .wcrt-form-table input[type="text"],
+  .wcrt-form-table input[type="number"],
+  .wcrt-form-table select {
+    max-width: 100%;
   }
 }
