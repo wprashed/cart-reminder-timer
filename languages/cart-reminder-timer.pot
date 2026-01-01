@@ -1,0 +1,341 @@
+# Cart Reminder Timer for WooCommerce Translation File
+# Copyright (C) 2024 Rashed Hossain
+# This file is distributed under the same license as the Cart Reminder Timer for WooCommerce package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Cart Reminder Timer for WooCommerce 6.0\n"
+"Report-Msgid-Bugs-To: https://rashedhossain.dev\n"
+"POT-Creation-Date: 2024-01-01 00:00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+
+#: cart-reminder-timer.php:0
+msgid "Cart Reminder Timer"
+msgstr ""
+
+#: cart-reminder-timer.php:0
+msgid "Interactive countdown timer with auto-apply coupons, email reminders, A/B testing and cart abandonment tracking."
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Access denied."
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Cart Reminder Timer Settings"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Configure your countdown timer and boost conversions"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "General"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Coupon"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Messages"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Advanced"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Save Settings"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Timer Configuration"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Timer Duration"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "minutes"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "How long items are reserved (1-60 minutes). Default: 15"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Show Timer On"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Cart Page Only"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Checkout Page Only"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Both Cart & Checkout"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Choose where the timer appears to customers"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Minimum Cart Amount"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Only show timer when cart exceeds this amount. Leave 0 to always show."
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Appearance"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Timer Position"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Top"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Bottom"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Color Scheme"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Red - Danger"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Yellow - Warning"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Blue - Info"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Green - Success"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Show Progress Bar"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Display animated progress bar showing remaining time"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Allow Dismiss"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Users can close timer and reopen it with a floating button"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Auto-Apply Coupon"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Enable Auto-Apply Coupon on Timer Expiry"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Automatically apply a discount when timer expires"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Discount Type"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Percentage (%)"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Fixed Amount"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Discount Amount"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Max Usage Per User"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "How many times each user can use the coupon"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Auto Clear Cart on Expiry"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Automatically clear all items when timer expires (if coupon not applied)"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Note:"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Coupon code will be automatically created and managed by the plugin."
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Messages & Notifications"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Message for Logged-In Users"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Personalized message for logged-in customers"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Message for Guests"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Generic message for guest customers"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Audio & Email Alerts"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Enable Sound Alert"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Play notification sound when 1 minute remains"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Enable Email Reminders"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Send email reminder before cart expires (logged-in users only)"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "A/B Testing"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Enable A/B Testing"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Test different messages and track which converts better"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Analytics & Tracking"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Cart Abandonment Tracking"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "This plugin tracks abandoned carts and their conversion status. View detailed analytics in WooCommerce > Reports > Orders."
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Getting Started"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Configure timer duration in General tab"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Customize messages in Messages tab"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Enable coupon and set discount in Coupon tab"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Save and test on your cart page"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Help & Documentation"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "View Full Documentation"
+msgstr ""
+
+#: includes/class-crt-admin.php:0
+msgid "Settings saved successfully!"
+msgstr ""
+
+#: includes/class-crt-timer.php:0
+msgid "Hurry! Your items are reserved."
+msgstr ""
+
+#: includes/class-crt-timer.php:0
+msgid "Limited time offer! Complete checkout now."
+msgstr ""
+
+#: includes/class-crt-timer.php:0
+msgid "Don't miss out! Cart expires soon."
+msgstr ""
+
+#: includes/class-crt-timer.php:0
+msgid "Act now! Items reserved for a limited time."
+msgstr ""
+
+#: includes/class-crt-email.php:0
+msgid "Your cart is about to expire! - %s"
+msgstr ""
+
+#: includes/class-crt-email.php:0
+msgid "Complete Your Purchase"
+msgstr ""
+
+#: includes/class-crt-email.php:0
+msgid "Your reserved items are about to expire. Click the button below to complete your purchase and receive your discount!"
+msgstr ""
+
+#: includes/class-crt-email.php:0
+msgid "Go to Cart"
+msgstr ""
+
+#: includes/class-crt-email.php:0
+msgid "Cart Value: %s"
+msgstr ""
+
+#: cart-reminder-timer.php:0
+msgid "<strong>Cart Reminder Timer</strong> requires %s to be installed and activated."
+msgstr ""
+
+#: cart-reminder-timer.php:0
+msgid "WooCommerce must be active to use Cart Reminder Timer."
+msgstr ""
