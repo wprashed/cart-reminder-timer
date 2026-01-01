@@ -7,15 +7,42 @@
 
     function mount(){
         if(mounted) return;
-        const placeholder = document.querySelector('#wcrt-placeholder');
-        if(!placeholder) return;
 
-        const box = document.createElement('div');
-        box.className='wcrt-timer';
-        box.innerHTML=`⏳ ${message()} <strong><span></span></strong>`;
-        placeholder.replaceWith(box);
-        countdown(box.querySelector('span'));
-        mounted=true;
+        // Classic placeholder
+        let placeholder = document.querySelector('#wcrt-placeholder');
+        if(placeholder){
+            const box = document.createElement('div');
+            box.className='wcrt-timer';
+            box.innerHTML=`⏳ ${message()} <strong><span></span></strong>`;
+            placeholder.replaceWith(box);
+            countdown(box.querySelector('span'));
+            mounted=true;
+            return;
+        }
+
+        // Block cart
+        let blockCart = document.querySelector('.wc-block-cart');
+        if(blockCart && !blockCart.querySelector('.wcrt-timer')){
+            const box = document.createElement('div');
+            box.className='wcrt-timer';
+            box.innerHTML=`⏳ ${message()} <strong><span></span></strong>`;
+            blockCart.prepend(box);
+            countdown(box.querySelector('span'));
+            mounted=true;
+            return;
+        }
+
+        // Block checkout
+        let blockCheckout = document.querySelector('.wc-block-checkout');
+        if(blockCheckout && !blockCheckout.querySelector('.wcrt-timer')){
+            const box = document.createElement('div');
+            box.className='wcrt-timer';
+            box.innerHTML=`⏳ ${message()} <strong><span></span></strong>`;
+            blockCheckout.prepend(box);
+            countdown(box.querySelector('span'));
+            mounted=true;
+            return;
+        }
     }
 
     function countdown(target){
@@ -27,6 +54,11 @@
     }
 
     $(document.body).on('updated_cart_totals wc_fragments_loaded', mount);
-    if(window.wp && wp.data){ wp.data.subscribe(()=>{ const cart=wp.data.select('wc/store/cart')?.getCartData(); if(cart && cart.items?.length) mount(); }); }
+    if(window.wp && wp.data){ 
+        wp.data.subscribe(()=>{
+            const cart=wp.data.select('wc/store/cart')?.getCartData();
+            if(cart && cart.items?.length) mount(); 
+        }); 
+    }
     document.addEventListener('DOMContentLoaded',mount);
 })(jQuery);
