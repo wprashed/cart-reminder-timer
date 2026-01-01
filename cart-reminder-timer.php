@@ -1,16 +1,15 @@
 <?php
 /**
- * Plugin Name: Cart Reminder Timer for WooCommerce
- * Description: Countdown urgency timer for WooCommerce cart & checkout (Classic + Blocks). Auto-coupon on expiry. A/B tracking.
+ * Plugin Name: Woo Cart Reminder Timer
+ * Description: Countdown urgency timer for WooCommerce cart & checkout (Classic + Blocks). Admin panel for messages & duration, expiry → coupon, A/B tracking.
  * Version: 3.0.0
  * Author: Rashed Hossain
  */
 
 if(!defined('ABSPATH')) exit;
 
-// Load admin settings
+// Load admin settings and coupon handler
 require_once plugin_dir_path(__FILE__) . 'admin/settings.php';
-// Load coupon handler
 require_once plugin_dir_path(__FILE__) . 'includes/coupon-handler.php';
 
 class Woo_Cart_Reminder_Timer {
