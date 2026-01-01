@@ -1,56 +1,32 @@
-const { subscribe, select } = wp.data;
+(function($){
+    let mounted = false;
+    let remaining = WCRT_DATA.remaining;
 
-function formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
-}
+    function format(sec){ const m=Math.floor(sec/60); const s=sec%60; return `${m}:${s<10?'0':''}${s}`; }
+    function message(){ const t=WCRT_DATA.loggedIn?'user':'guest'; return WCRT_DATA.messages[WCRT_DATA.variant][t]; }
 
-function getMessage() {
-    const type = WooCartTimer.isLoggedIn ? 'user' : 'guest';
-    return WooCartTimer.messages[WooCartTimer.variant][type];
-}
+    function mount(){
+        if(mounted) return;
+        const placeholder = document.querySelector('#wcrt-placeholder');
+        if(!placeholder) return;
 
-function mountTimer() {
-    const targets = document.querySelectorAll(
-        '.wc-block-cart-items, .wc-block-checkout, .wc-block-mini-cart'
-    );
+        const box = document.createElement('div');
+        box.className='wcrt-timer';
+        box.innerHTML=`⏳ ${message()} <strong><span></span></strong>`;
+        placeholder.replaceWith(box);
+        countdown(box.querySelector('span'));
+        mounted=true;
+    }
 
-    if (!targets.length) return;
+    function countdown(target){
+        const tick=()=>{
+            if(remaining<=0){ target.closest('.wcrt-timer').innerHTML='⚠️ Cart reservation expired.'; return; }
+            target.textContent=format(remaining--); setTimeout(tick,1000);
+        };
+        tick();
+    }
 
-    targets.forEach(container => {
-        if (container.querySelector('.woo-cart-timer')) return;
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'woo-cart-timer';
-        wrapper.innerHTML = `
-            ⏳ ${getMessage()}
-            <strong><span class="woo-cart-timer-countdown"></span></strong>
-        `;
-
-        container.prepend(wrapper);
-        startCountdown(wrapper.querySelector('.woo-cart-timer-countdown'));
-    });
-}
-
-function startCountdown(output) {
-    let remaining = WooCartTimer.remaining;
-
-    const tick = () => {
-        if (remaining <= 0) {
-            output.closest('.woo-cart-timer').innerHTML =
-                '⚠️ Cart reservation expired.';
-            return;
-        }
-        output.textContent = formatTime(remaining--);
-        setTimeout(tick, 1000);
-    };
-
-    tick();
-}
-
-subscribe(() => {
-    const cart = select('wc/store/cart').getCartData();
-    if (!cart || !cart.items?.length) return;
-    mountTimer();
-});
+    $(document.body).on('updated_cart_totals wc_fragments_loaded', mount);
+    if(window.wp && wp.data){ wp.data.subscribe(()=>{ const cart=wp.data.select('wc/store/cart')?.getCartData(); if(cart && cart.items?.length) mount(); }); }
+    document.addEventListener('DOMContentLoaded',mount);
+})(jQuery);
