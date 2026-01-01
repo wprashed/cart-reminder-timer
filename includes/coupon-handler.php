@@ -1,70 +1,46 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-/**
- * Woo Cart Reminder Timer Coupon Handler
- * Applies pre-created coupon on expiry
- * Works for Classic + Block carts
- */
+// Reset timer on cart change
+add_action('woocommerce_cart_item_removed', 'wcrt_reset_timer');
+add_action('woocommerce_cart_item_restored', 'wcrt_reset_timer');
+add_action('woocommerce_cart_updated', 'wcrt_reset_timer');
 
-add_action('wp', function(){
-
-    // Only run on front-end
-    if( is_admin() || !WC()->cart || WC()->cart->is_empty() ) return;
-
-    // Get cart timer start
-    $start = WC()->session->get('wcrt_start');
-    if( !$start ) return;
-
-    // Calculate remaining time
-    $duration = get_option('wcrt_duration',15) * 60;
-    $remaining = $duration - ( time() - $start );
-    if( $remaining > 0 ) return;
-
-    // Already expired? Stop
-    if( WC()->session->get('wcrt_expired') ) return;
-    WC()->session->set('wcrt_expired', 1);
-
-    // If auto-coupon enabled
-    if( get_option('wcrt_coupon') ){
-
-        $code = 'CRT-TIMER'; // pre-created coupon code
-
-        // Ensure coupon exists (safety)
-        if( !post_exists($code,'','shop_coupon') ){
-            $post_id = wp_insert_post([
-                'post_title'   => $code,
-                'post_content' => 'Cart Reminder Timer coupon',
-                'post_status'  => 'publish',
-                'post_type'    => 'shop_coupon'
-            ]);
-            update_post_meta($post_id,'discount_type','percent');
-            update_post_meta($post_id,'coupon_amount', get_option('wcrt_coupon_amount',10) );
-            update_post_meta($post_id,'individual_use','yes');
-            update_post_meta($post_id,'usage_limit',1);
-            update_post_meta($post_id,'apply_before_tax','yes');
-        }
-
-        // Apply coupon if not already applied
-        if( !WC()->cart->has_discount( $code ) ){
-            WC()->cart->apply_coupon( $code );
-        }
-
-        // Refresh block cart / checkout so discount shows immediately
-        add_action('wp_footer', function(){
-            ?>
-            <script type="text/javascript">
-            document.addEventListener('DOMContentLoaded', function(){
-                jQuery('body').trigger('update_checkout');
-                jQuery('body').trigger('wc_fragment_refresh');
-            });
-            </script>
-            <?php
-        });
-
-    } elseif( get_option('wcrt_autoclear',0) ){
-        // Optional auto-clear cart if coupon not used
-        WC()->cart->empty_cart();
+function wcrt_reset_timer(){
+    if(WC()->cart && !WC()->cart->is_empty()){
+        WC()->session->set('wcrt_start', time());
+        WC()->session->set('wcrt_expired', 0);
+        WC()->session->set('wcrt_variant', rand(0,1)?'A':'B');
+    } else {
+        WC()->session->__unset('wcrt_start');
+        WC()->session->__unset('wcrt_expired');
+        WC()->session->__unset('wcrt_variant');
     }
+}
 
+// Apply coupon automatically
+add_action('woocommerce_before_calculate_totals', function($cart){
+    if(!WC()->session || !get_option('wcrt_coupon') ) return;
+    if(!WC()->cart || WC()->cart->is_empty()) return;
+
+    $code = 'CRT-TIMER';
+    if(!WC()->cart->has_discount($code)){
+        WC()->cart->apply_coupon($code);
+        WC()->cart->calculate_totals();
+    }
+});
+
+// Refresh block cart
+add_action('wp_footer', function(){
+    ?>
+    <script>
+    jQuery(document).on('updated_cart_totals wc_fragments_loaded added_to_cart removed_from_cart', function(){
+        if(window.wcBlocksCartEditor && typeof wcBlocksCartEditor.refreshCart==='function'){
+            wcBlocksCartEditor.refreshCart();
+        }
+        jQuery('body').trigger('wc_fragment_refresh');
+        jQuery('body').trigger('update_checkout');
+    });
+    </script>
+    <?php
 });
