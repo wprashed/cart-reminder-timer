@@ -1,10 +1,184 @@
-.wcrt-timer{
-    background:#fff3cd;
-    border:1px solid #ffeeba;
-    padding:10px;
-    margin-bottom:10px;
-    font-weight:bold;
-    color:#856404;
-    text-align:center;
-    font-size:16px;
+/* Modern Interactive Timer Styles */
+.wcrt-timer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.4s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.wcrt-timer.danger {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.wcrt-timer.warning {
+  background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+  color: #333;
+}
+
+.wcrt-timer.info {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.wcrt-timer.success {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: #333;
+}
+
+/* Pulse animation for urgency */
+.wcrt-timer.critical {
+  animation: pulse 1s infinite, slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* Progress bar */
+.wcrt-progress-container {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.wcrt-progress-bar {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  width: 100%;
+  transition: width 1s linear;
+  border-radius: 4px;
+}
+
+/* Timer content */
+.wcrt-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wcrt-message {
+  flex: 1;
+  text-align: center;
+}
+
+.wcrt-timer-value {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Monaco", "Courier New", monospace;
+  display: inline-block;
+  min-width: 80px;
+}
+
+/* Dismiss button */
+.wcrt-dismiss-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.wcrt-dismiss-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+/* Reopen button */
+.wcrt-reopen-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  transition: all 0.3s ease;
+  display: none;
+}
+
+.wcrt-reopen-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.wcrt-reopen-btn.show {
+  display: block;
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .wcrt-timer {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .wcrt-content {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .wcrt-timer-value {
+    font-size: 20px;
+    min-width: auto;
+  }
+
+  .wcrt-dismiss-btn {
+    width: 100%;
+  }
+
+  .wcrt-reopen-btn {
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+}
+
+/* Expired state */
+.wcrt-timer.expired {
+  animation: none;
+}
+
+.wcrt-timer.expired .wcrt-content {
+  color: #fff;
 }
