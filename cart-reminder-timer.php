@@ -4,7 +4,7 @@
  * Description: Interactive countdown timer with auto-apply coupons, email reminders, A/B testing and cart abandonment tracking.
  * Version: 6.0
  * Author: Rashed Hossain
- * Author URI: https://rashedhossain.dev
+ * Author URI: https://rashed.im
  * Text Domain: cart-reminder-timer
  * Domain Path: /languages
  * Requires at least: 5.0
@@ -13,6 +13,7 @@
  * WC tested up to: 8.0
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Required plugins: WooCommerce
  *
  * @package Cart_Reminder_Timer_For_WooCommerce
  * @author Rashed Hossain
