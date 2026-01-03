@@ -1,8 +1,8 @@
 <?php
 /**
- * crt_Email class - Handle email reminders for abandoned carts.
+ * CRT_Email class - Handle email reminders for abandoned carts.
  *
- * @package Cart_Reminder_Timer
+ * @package Cart_Reminder_Timer_For_WooCommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Email reminder class.
  */
-class crt_Email {
+class CRT_Email {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var crt_Email|null
+	 * @var CRT_Email|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return crt_Email
+	 * @return CRT_Email
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -112,7 +112,7 @@ class crt_Email {
 
 		$subject = sprintf(
 			/* translators: %s: Site name */
-			__( 'Your cart is about to expire! - %s', crt_TEXT_DOMAIN ),
+			__( 'Your cart is about to expire! - %s', CRT_TEXT_DOMAIN ),
 			get_bloginfo( 'name' )
 		);
 
@@ -122,14 +122,14 @@ class crt_Email {
 			<p>%s</p>
 			<p><a href="%s" style="background-color: #007cba; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">%s</a></p>
 			<p>%s</p>',
-			esc_html__( 'Complete Your Purchase', crt_TEXT_DOMAIN ),
+			esc_html__( 'Complete Your Purchase', CRT_TEXT_DOMAIN ),
 			esc_html( $user_name ),
-			esc_html__( 'Your reserved items are about to expire. Click the button below to complete your purchase and receive your discount!', crt_TEXT_DOMAIN ),
+			esc_html__( 'Your reserved items are about to expire. Click the button below to complete your purchase and receive your discount!', CRT_TEXT_DOMAIN ),
 			esc_url_raw( $cart_url ),
-			esc_html__( 'Go to Cart', crt_TEXT_DOMAIN ),
+			esc_html__( 'Go to Cart', CRT_TEXT_DOMAIN ),
 			sprintf(
 				/* translators: %s: Cart value */
-				esc_html__( 'Cart Value: %s', crt_TEXT_DOMAIN ),
+				esc_html__( 'Cart Value: %s', CRT_TEXT_DOMAIN ),
 				wp_kses_post( wc_price( $cart->cart_value ) )
 			)
 		);
