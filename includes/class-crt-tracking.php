@@ -1,8 +1,8 @@
 <?php
 /**
- * crt_Tracking class - Track abandoned carts and conversions.
+ * CRT_Tracking class - Track abandoned carts and conversions.
  *
- * @package Cart_Reminder_Timer
+ * @package Cart_Reminder_Timer_For_WooCommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Cart tracking class.
  */
-class crt_Tracking {
+class CRT_Tracking {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var crt_Tracking|null
+	 * @var CRT_Tracking|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return crt_Tracking
+	 * @return CRT_Tracking
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
