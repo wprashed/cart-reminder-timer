@@ -1,8 +1,8 @@
 <?php
 /**
- * WCRT_Coupon class - Handle coupon creation and application.
+ * CRT_Coupon class - Handle coupon creation and application.
  *
- * @package WooCommerce_Cart_Reminder_Timer
+ * @package Cart_Reminder_Timer_For_WooCommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Coupon management class.
  */
-class WCRT_Coupon {
+class CRT_Coupon {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var WCRT_Coupon|null
+	 * @var CRT_Coupon|null
 	 */
 	private static $instance = null;
 
@@ -26,12 +26,12 @@ class WCRT_Coupon {
 	 *
 	 * @var string
 	 */
-	const COUPON_CODE = 'WCRT-TIMER';
+	const COUPON_CODE = 'CRT-TIMER';
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return WCRT_Coupon
+	 * @return CRT_Coupon
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -96,7 +96,7 @@ class WCRT_Coupon {
 			return;
 		}
 
-		if ( ! wcrt_get_option( 'coupon' ) ) {
+		if ( ! crt_get_option( 'coupon' ) ) {
 			return;
 		}
 
@@ -104,11 +104,11 @@ class WCRT_Coupon {
 			return;
 		}
 
-		if ( WC()->session->get( 'wcrt_timer_expired' ) ) {
+		if ( WC()->session->get( 'crt_timer_expired' ) ) {
 			return;
 		}
 
-		$coupon_cache_key = 'wcrt_coupon_obj_' . WCRT_VERSION;
+		$coupon_cache_key = 'crt_coupon_obj_' . CRT_VERSION;
 		$coupon = wp_cache_get( $coupon_cache_key );
 
 		if ( false === $coupon ) {
@@ -120,9 +120,9 @@ class WCRT_Coupon {
 			return;
 		}
 
-		$discount_type = sanitize_text_field( wcrt_get_option( 'coupon_type', 'percent' ) );
-		$discount_amount = (float) wcrt_get_option( 'coupon_amount', 10 );
-		$usage_limit = (int) wcrt_get_option( 'max_usage', 1 );
+		$discount_type = sanitize_text_field( crt_get_option( 'coupon_type', 'percent' ) );
+		$discount_amount = (float) crt_get_option( 'coupon_amount', 10 );
+		$usage_limit = (int) crt_get_option( 'max_usage', 1 );
 
 		if ( $coupon->get_discount_type() !== $discount_type ||
 			 abs( (float) $coupon->get_amount() - $discount_amount ) > 0.01 ||
@@ -138,12 +138,12 @@ class WCRT_Coupon {
 		$code = $coupon->get_code();
 
 		// Apply coupon if not already applied.
-		if ( ! WC()->session->get( 'wcrt_coupon_applied' ) ) {
+		if ( ! WC()->session->get( 'crt_coupon_applied' ) ) {
 			if ( $cart->has_discount( $code ) ) {
 				$cart->remove_coupon( $code );
 			}
 			$cart->apply_coupon( $code );
-			WC()->session->set( 'wcrt_coupon_applied', true );
+			WC()->session->set( 'crt_coupon_applied', true );
 		}
 	}
 
@@ -162,13 +162,13 @@ class WCRT_Coupon {
 			if ( 'percent' === $discount_type ) {
 				return sprintf(
 					/* translators: %s: discount percentage */
-					esc_html__( 'Discount: %s%%', WCRT_TEXT_DOMAIN ),
+					esc_html__( 'Discount: %s%%', CRT_TEXT_DOMAIN ),
 					$amount
 				);
 			} else {
 				return sprintf(
 					/* translators: %s: discount amount */
-					esc_html__( 'Discount: %s', WCRT_TEXT_DOMAIN ),
+					esc_html__( 'Discount: %s', CRT_TEXT_DOMAIN ),
 					wc_price( $amount )
 				);
 			}
@@ -204,15 +204,15 @@ class WCRT_Coupon {
 		}
 
 		if ( WC()->cart->is_empty() ) {
-			WC()->session->__unset( 'wcrt_start' );
-			WC()->session->__unset( 'wcrt_variant' );
-			WC()->session->__unset( 'wcrt_coupon_applied' );
-			WC()->session->__unset( 'wcrt_timer_expired' );
+			WC()->session->__unset( 'crt_start' );
+			WC()->session->__unset( 'crt_variant' );
+			WC()->session->__unset( 'crt_coupon_applied' );
+			WC()->session->__unset( 'crt_timer_expired' );
 		} else {
-			WC()->session->set( 'wcrt_start', time() );
-			WC()->session->set( 'wcrt_variant', rand( 0, 1 ) ? 'A' : 'B' );
-			WC()->session->__unset( 'wcrt_coupon_applied' );
-			WC()->session->__unset( 'wcrt_timer_expired' );
+			WC()->session->set( 'crt_start', time() );
+			WC()->session->set( 'crt_variant', rand( 0, 1 ) ? 'A' : 'B' );
+			WC()->session->__unset( 'crt_coupon_applied' );
+			WC()->session->__unset( 'crt_timer_expired' );
 		}
 	}
 }
