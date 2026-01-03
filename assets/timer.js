@@ -1,5 +1,5 @@
 /**
- * WooCommerce Cart Reminder Timer - Frontend Countdown
+ * Cart Reminder Timer - Frontend Countdown
  */
 
 ;((jQuery) => {
@@ -27,7 +27,7 @@
       return
     }
 
-    if (!window.WCRT_DATA) {
+    if (!window.CRT_DATA) {
       return
     }
 
@@ -37,19 +37,19 @@
       return
     }
 
-    if (container.querySelector(".wcrt-timer")) {
+    if (container.querySelector(".crt-timer")) {
       return
     }
 
     const timerElement = createTimerElement()
-    if (window.WCRT_DATA.position === "top") {
+    if (window.CRT_DATA.position === "top") {
       container.prepend(timerElement)
     } else {
       container.appendChild(timerElement)
     }
 
-    const progressBar = timerElement.querySelector(".wcrt-progress-bar")
-    const timeSpan = timerElement.querySelector(".wcrt-time")
+    const progressBar = timerElement.querySelector(".crt-progress-bar")
+    const timeSpan = timerElement.querySelector(".crt-time")
 
     startCountdown(timeSpan, timerElement, progressBar)
     mounted = true
@@ -60,7 +60,7 @@
    */
   function getCartCheckoutContainer() {
     // Cart page containers
-    if (window.WCRT_DATA.show_on === "cart" || window.WCRT_DATA.show_on === "both") {
+    if (window.CRT_DATA.show_on === "cart" || window.CRT_DATA.show_on === "both") {
       const cartContainers = [
         ".woocommerce-cart-form",
         ".wc-block-cart",
@@ -78,7 +78,7 @@
     }
 
     // Checkout page containers
-    if (window.WCRT_DATA.show_on === "checkout" || window.WCRT_DATA.show_on === "both") {
+    if (window.CRT_DATA.show_on === "checkout" || window.CRT_DATA.show_on === "both") {
       const checkoutContainers = [
         ".wc-block-checkout",
         ".checkout",
@@ -106,28 +106,28 @@
    */
   function createTimerElement() {
     const div = document.createElement("div")
-    div.className = "wcrt-timer " + window.WCRT_DATA.color_scheme
+    div.className = "crt-timer " + window.CRT_DATA.color_scheme
 
     const html = `
-			${window.WCRT_DATA.show_progress ? '<div class="wcrt-progress-container"><div class="wcrt-progress-bar"></div></div>' : ""}
-			<div class="wcrt-content">
-				<span class="wcrt-message">⏳ ${window.WCRT_DATA.messages[window.WCRT_DATA.variant][window.WCRT_DATA.loggedIn ? "user" : "guest"]}</span>
-				<strong class="wcrt-timer-value"><span class="wcrt-time">00:00</span></strong>
-				${window.WCRT_DATA.dismissable ? '<button type="button" class="wcrt-dismiss-btn">✕ Dismiss</button>' : ""}
+			${window.CRT_DATA.show_progress ? '<div class="crt-progress-container"><div class="crt-progress-bar"></div></div>' : ""}
+			<div class="crt-content">
+				<span class="crt-message">⏳ ${window.CRT_DATA.messages[window.CRT_DATA.variant][window.CRT_DATA.loggedIn ? "user" : "guest"]}</span>
+				<strong class="crt-timer-value"><span class="crt-time">00:00</span></strong>
+				${window.CRT_DATA.dismissable ? '<button type="button" class="crt-dismiss-btn">✕ Dismiss</button>' : ""}
 			</div>
 		`
 
     div.innerHTML = html
 
     // Attach dismiss handler
-    if (window.WCRT_DATA.dismissable) {
-      const dismissBtn = div.querySelector(".wcrt-dismiss-btn")
+    if (window.CRT_DATA.dismissable) {
+      const dismissBtn = div.querySelector(".crt-dismiss-btn")
       dismissBtn.addEventListener("click", (e) => {
         e.preventDefault()
         isDismissed = true
         div.style.display = "none"
         createReopenButton()
-        localStorage.setItem("wcrt_dismissed", "1")
+        localStorage.setItem("crt_dismissed", "1")
       })
     }
 
@@ -141,22 +141,22 @@
     function tick() {
       if (remaining <= 0) {
         timerExpired = true
-        timerDiv.innerHTML = "⚠️ " + window.WCRT_DATA.expiredMessage
+        timerDiv.innerHTML = "⚠️ " + window.CRT_DATA.expiredMessage
         timerDiv.classList.add("expired")
         clearInterval(timerInterval)
 
         // Remove coupon via AJAX
-        jQuery.post(window.WCRT_DATA.ajax_url, {
-          action: "wcrt_remove_expired_coupon",
-          nonce: window.WCRT_DATA.nonce,
+        jQuery.post(window.CRT_DATA.ajax_url, {
+          action: "crt_remove_expired_coupon",
+          nonce: window.CRT_DATA.nonce,
         })
 
         // Update page to reflect coupon removal
         jQuery("body").trigger("wc_update_cart")
 
-        if (localStorage.getItem("wcrt_dismissed")) {
-          localStorage.removeItem("wcrt_dismissed")
-          const reopenBtn = document.querySelector(".wcrt-reopen-btn")
+        if (localStorage.getItem("crt_dismissed")) {
+          localStorage.removeItem("crt_dismissed")
+          const reopenBtn = document.querySelector(".crt-reopen-btn")
           if (reopenBtn) {
             reopenBtn.style.display = "none"
           }
@@ -172,7 +172,7 @@
       }
 
       // Add critical class when 1 minute left
-      if (remaining === 60 && window.WCRT_DATA.enable_sound) {
+      if (remaining === 60 && window.CRT_DATA.enable_sound) {
         playAlertSound()
         timerDiv.classList.add("critical")
       }
@@ -188,7 +188,7 @@
    * Create reopen button for dismissed timer
    */
   function createReopenButton() {
-    let reopenBtn = document.querySelector(".wcrt-reopen-btn")
+    let reopenBtn = document.querySelector(".crt-reopen-btn")
 
     if (reopenBtn) {
       reopenBtn.classList.add("show")
@@ -196,14 +196,14 @@
     }
 
     reopenBtn = document.createElement("button")
-    reopenBtn.className = "wcrt-reopen-btn show"
+    reopenBtn.className = "crt-reopen-btn show"
     reopenBtn.innerHTML = "⏳"
     reopenBtn.type = "button"
 
     reopenBtn.addEventListener("click", function (e) {
       e.preventDefault()
       isDismissed = false
-      const timer = document.querySelector(".wcrt-timer")
+      const timer = document.querySelector(".crt-timer")
       if (timer) {
         timer.style.display = "block"
         this.classList.remove("show")
@@ -211,7 +211,7 @@
           reopenBtn.remove()
         }, 400)
       }
-      localStorage.removeItem("wcrt_dismissed")
+      localStorage.removeItem("crt_dismissed")
     })
 
     document.body.appendChild(reopenBtn)
@@ -246,11 +246,11 @@
    * Initialize on document ready
    */
   jQuery(() => {
-    if (window.WCRT_DATA) {
-      remaining = window.WCRT_DATA.remaining
-      totalDuration = window.WCRT_DATA.duration
+    if (window.CRT_DATA) {
+      remaining = window.CRT_DATA.remaining
+      totalDuration = window.CRT_DATA.duration
 
-      if (localStorage.getItem("wcrt_dismissed")) {
+      if (localStorage.getItem("crt_dismissed")) {
         isDismissed = true
       }
 
@@ -262,11 +262,11 @@
    * Remount timer on cart update
    */
   jQuery(document.body).on("updated_cart_totals wc_fragments_loaded added_to_cart removed_from_cart", () => {
-    if (!isDismissed && window.WCRT_DATA) {
+    if (!isDismissed && window.CRT_DATA) {
       mounted = false
       clearInterval(timerInterval)
-      remaining = window.WCRT_DATA.remaining
-      totalDuration = window.WCRT_DATA.duration
+      remaining = window.CRT_DATA.remaining
+      totalDuration = window.CRT_DATA.duration
       timerExpired = false
       mountTimer()
     }
