@@ -263,10 +263,11 @@
    */
   jQuery(document.body).on("updated_cart_totals wc_fragments_loaded added_to_cart removed_from_cart", () => {
     if (!isDismissed && window.CRT_DATA) {
-      mounted = false
-      clearInterval(timerInterval)
       remaining = window.CRT_DATA.remaining
       totalDuration = window.CRT_DATA.duration
+
+      mounted = false
+      clearInterval(timerInterval)
       timerExpired = false
       mountTimer()
     }
