@@ -141,7 +141,7 @@
     function tick() {
       if (remaining <= 0) {
         timerExpired = true
-        timerDiv.innerHTML = "⚠️ " + window.CRT_DATA.expiredMessage
+        timerDiv.innerHTML = `<div class="crt-expired-notice">⚠️ <strong>${window.CRT_DATA.expiredMessage}</strong><br><span class="crt-expired-notice-subtitle">Your discount has been removed. Add items again to get a new discount.</span></div>`
         timerDiv.classList.add("expired")
         clearInterval(timerInterval)
 
@@ -171,7 +171,6 @@
         progressBar.style.width = progress + "%"
       }
 
-      // Add critical class when 1 minute left
       if (remaining === 60 && window.CRT_DATA.enable_sound) {
         playAlertSound()
         timerDiv.classList.add("critical")
