@@ -1,8 +1,8 @@
 /**
- * WooCommerce Cart Reminder Timer - Frontend Styles
+ * Cart Reminder Timer - Frontend Styles
  */
 
-.wcrt-timer {
+.crt-timer {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   border-radius: 8px;
@@ -12,34 +12,34 @@
   text-align: center;
   font-size: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  animation: wcrt-slideIn 0.4s ease-out;
+  animation: crt-slideIn 0.4s ease-out;
   position: relative;
   overflow: hidden;
 }
 
-.wcrt-timer.danger {
+.crt-timer.danger {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.wcrt-timer.warning {
+.crt-timer.warning {
   background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
   color: #1f2937;
 }
 
-.wcrt-timer.info {
+.crt-timer.info {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.wcrt-timer.success {
+.crt-timer.success {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
   color: #1f2937;
 }
 
-.wcrt-timer.critical {
-  animation: wcrt-pulse 1s infinite, wcrt-slideIn 0.4s ease-out;
+.crt-timer.critical {
+  animation: crt-pulse 1s infinite, crt-slideIn 0.4s ease-out;
 }
 
-@keyframes wcrt-slideIn {
+@keyframes crt-slideIn {
   from {
     transform: translateY(-20px);
     opacity: 0;
@@ -50,7 +50,7 @@
   }
 }
 
-@keyframes wcrt-pulse {
+@keyframes crt-pulse {
   0%,
   100% {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -60,7 +60,7 @@
   }
 }
 
-.wcrt-progress-container {
+.crt-progress-container {
   height: 4px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
@@ -68,7 +68,7 @@
   overflow: hidden;
 }
 
-.wcrt-progress-bar {
+.crt-progress-bar {
   height: 100%;
   background: rgba(255, 255, 255, 0.8);
   width: 100%;
@@ -76,7 +76,7 @@
   border-radius: 4px;
 }
 
-.wcrt-content {
+.crt-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -84,14 +84,14 @@
   flex-wrap: wrap;
 }
 
-.wcrt-message {
+.crt-message {
   flex: 1;
   text-align: center;
   min-width: 200px;
   font-weight: 500;
 }
 
-.wcrt-timer-value {
+.crt-timer-value {
   font-size: 28px;
   font-weight: 700;
   font-family: "Courier New", monospace;
@@ -100,7 +100,7 @@
   letter-spacing: 1px;
 }
 
-.wcrt-dismiss-btn {
+.crt-dismiss-btn {
   background: rgba(255, 255, 255, 0.25);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -114,12 +114,12 @@
   white-space: nowrap;
 }
 
-.wcrt-dismiss-btn:hover {
+.crt-dismiss-btn:hover {
   background: rgba(255, 255, 255, 0.35);
   transform: scale(1.05);
 }
 
-.wcrt-reopen-btn {
+.crt-reopen-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -140,51 +140,51 @@
   padding: 0;
 }
 
-.wcrt-reopen-btn:hover {
+.crt-reopen-btn:hover {
   transform: scale(1.15);
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
 }
 
-.wcrt-reopen-btn.show {
+.crt-reopen-btn.show {
   display: flex;
-  animation: wcrt-slideIn 0.4s ease-out;
+  animation: crt-slideIn 0.4s ease-out;
 }
 
-.wcrt-timer.expired {
+.crt-timer.expired {
   animation: none;
   opacity: 0.9;
 }
 
-.wcrt-timer.expired .wcrt-content {
+.crt-timer.expired .crt-content {
   color: #fff;
 }
 
 @media (max-width: 768px) {
-  .wcrt-timer {
+  .crt-timer {
     padding: 12px;
     font-size: 14px;
   }
 
-  .wcrt-content {
+  .crt-content {
     flex-direction: column;
     gap: 8px;
   }
 
-  .wcrt-message {
+  .crt-message {
     min-width: 100%;
   }
 
-  .wcrt-timer-value {
+  .crt-timer-value {
     font-size: 24px;
     min-width: auto;
   }
 
-  .wcrt-dismiss-btn {
+  .crt-dismiss-btn {
     width: 100%;
     padding: 10px 12px;
   }
 
-  .wcrt-reopen-btn {
+  .crt-reopen-btn {
     bottom: 10px;
     right: 10px;
     width: 50px;
