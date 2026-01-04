@@ -113,21 +113,21 @@ class CRT_Timer {
 			'A' => array(
 				'user'  => crt_get_option(
 					'message_user',
-					__( 'Hurry! Your items are reserved.', CRT_TEXT_DOMAIN )
+					__( 'Hurry! Your items are reserved for a limited time.', CRT_TEXT_DOMAIN )
 				),
 				'guest' => crt_get_option(
 					'message_guest',
-					__( 'Limited time offer! Complete checkout now.', CRT_TEXT_DOMAIN )
+					__( 'Limited time offer! Complete checkout now to get your discount.', CRT_TEXT_DOMAIN )
 				),
 			),
 			'B' => array(
 				'user'  => crt_get_option(
 					'message_user_b',
-					__( 'Don\'t miss out! Cart expires soon.', CRT_TEXT_DOMAIN )
+					__( 'Don\'t miss out! Cart expires soon - checkout now!', CRT_TEXT_DOMAIN )
 				),
 				'guest' => crt_get_option(
 					'message_guest_b',
-					__( 'Act now! Items reserved for a limited time.', CRT_TEXT_DOMAIN )
+					__( 'Act now! Complete your purchase before the timer ends.', CRT_TEXT_DOMAIN )
 				),
 			),
 		);
@@ -151,7 +151,7 @@ class CRT_Timer {
 			'enable_sound'     => (int) crt_get_option( 'enable_sound', 0 ),
 			'ajax_url'         => esc_url_raw( admin_url( 'admin-ajax.php' ) ),
 			'nonce'            => wp_create_nonce( 'crt_remove_coupon' ),
-			'expiredMessage'   => esc_html__( 'Cart timer expired. Your items have been released.', CRT_TEXT_DOMAIN ),
+			'expiredMessage'   => esc_html__( 'Cart timer expired. Your discount has been removed.', CRT_TEXT_DOMAIN ),
 		);
 	}
 
