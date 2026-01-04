@@ -50,6 +50,8 @@ class CRT_Coupon {
 		add_action( 'woocommerce_cart_item_restored', array( $this, 'maybe_reset_timer' ) );
 		add_filter( 'woocommerce_cart_totals_coupon_label', array( $this, 'hide_coupon_code' ), 10, 2 );
 		add_filter( 'woocommerce_order_item_get_formatted_meta_data', array( $this, 'hide_coupon_code_meta' ), 10, 2 );
+		add_filter( 'woocommerce_applied_coupon', array( $this, 'hide_applied_coupon_label' ) );
+		add_filter( 'woocommerce_get_formatted_discount', array( $this, 'hide_coupon_code_in_discount' ), 10, 2 );
 	}
 
 	/**
@@ -156,25 +158,65 @@ class CRT_Coupon {
 	 */
 	public function hide_coupon_code( $label, $coupon ) {
 		if ( $coupon && self::COUPON_CODE === $coupon->get_code() ) {
-			$discount_type = $coupon->get_discount_type();
-			$amount = $coupon->get_amount();
-
-			if ( 'percent' === $discount_type ) {
-				return sprintf(
-					/* translators: %s: discount percentage */
-					esc_html__( 'Discount: %s%%', CRT_TEXT_DOMAIN ),
-					$amount
-				);
-			} else {
-				return sprintf(
-					/* translators: %s: discount amount */
-					esc_html__( 'Discount: %s', CRT_TEXT_DOMAIN ),
-					wc_price( $amount )
-				);
-			}
+			return $this->get_discount_label( $coupon );
 		}
 
 		return $label;
+	}
+
+	/**
+	 * Hide coupon code from applied coupons display.
+	 *
+	 * @param string $coupon_code The coupon code.
+	 * @return string
+	 */
+	public function hide_applied_coupon_label( $coupon_code ) {
+		if ( self::COUPON_CODE === $coupon_code ) {
+			// Don't return anything, this hides it from the list
+			return '';
+		}
+
+		return $coupon_code;
+	}
+
+	/**
+	 * Hide coupon code in formatted discount display.
+	 *
+	 * @param string $discount Formatted discount string.
+	 * @param object $coupon The coupon object.
+	 * @return string
+	 */
+	public function hide_coupon_code_in_discount( $discount, $coupon ) {
+		if ( $coupon && self::COUPON_CODE === $coupon->get_code() ) {
+			return $this->get_discount_label( $coupon );
+		}
+
+		return $discount;
+	}
+
+	/**
+	 * Get formatted discount label for timer coupon.
+	 *
+	 * @param WC_Coupon $coupon The coupon object.
+	 * @return string
+	 */
+	private function get_discount_label( $coupon ) {
+		$discount_type = $coupon->get_discount_type();
+		$amount = $coupon->get_amount();
+
+		if ( 'percent' === $discount_type ) {
+			return sprintf(
+				/* translators: %s: discount percentage */
+				esc_html__( 'Discount: %s%%', CRT_TEXT_DOMAIN ),
+				floatval( $amount )
+			);
+		} else {
+			return sprintf(
+				/* translators: %s: discount amount */
+				esc_html__( 'Discount: %s', CRT_TEXT_DOMAIN ),
+				wc_price( floatval( $amount ) )
+			);
+		}
 	}
 
 	/**
@@ -209,7 +251,7 @@ class CRT_Coupon {
 			WC()->session->__unset( 'crt_coupon_applied' );
 			WC()->session->__unset( 'crt_timer_expired' );
 		} else {
-			WC()->session->set( 'crt_start', time() );
+			// This ensures timer continues from where it was, not restarting
 			WC()->session->set( 'crt_variant', rand( 0, 1 ) ? 'A' : 'B' );
 			WC()->session->__unset( 'crt_coupon_applied' );
 			WC()->session->__unset( 'crt_timer_expired' );
