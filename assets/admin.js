@@ -1,9 +1,9 @@
 /**
- * WooCommerce Cart Reminder Timer - Admin Panel JS
+ * Cart Reminder Timer - Admin Panel JS
  */
 
 ;(($) => {
-  const wcrtAdminData = window.wcrtAdminData || {
+  const crtAdminData = window.crtAdminData || {
     currencySymbol: "$",
   }
 
@@ -11,8 +11,8 @@
    * Initialize admin panel tabs
    */
   function initTabs() {
-    const tabButtons = document.querySelectorAll(".wcrt-tab-nav-item")
-    const tabPanes = document.querySelectorAll(".wcrt-tab-pane")
+    const tabButtons = document.querySelectorAll(".crt-tab-nav-item")
+    const tabPanes = document.querySelectorAll(".crt-tab-pane")
 
     tabButtons.forEach((button) => {
       button.addEventListener("click", function () {
@@ -28,7 +28,7 @@
 
         // Add active class to clicked button and corresponding pane
         this.classList.add("active")
-        document.getElementById("wcrt-tab-" + tabName).classList.add("active")
+        document.getElementById("crt-tab-" + tabName).classList.add("active")
       })
     })
   }
@@ -37,8 +37,8 @@
    * Update coupon unit display based on type
    */
   function initCouponUnitToggle() {
-    const couponTypeSelect = document.getElementById("wcrt_coupon_type")
-    const couponUnit = document.getElementById("wcrt_coupon_unit")
+    const couponTypeSelect = document.getElementById("crt_coupon_type")
+    const couponUnit = document.getElementById("crt_coupon_unit")
 
     if (!couponTypeSelect || !couponUnit) {
       return
@@ -48,7 +48,7 @@
       if ("percent" === this.value) {
         couponUnit.textContent = "%"
       } else {
-        couponUnit.textContent = wcrtAdminData.currencySymbol || "$"
+        couponUnit.textContent = crtAdminData.currencySymbol || "$"
       }
     })
   }
