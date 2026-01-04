@@ -53,6 +53,7 @@ class CRT_Coupon {
 		add_filter( 'woocommerce_applied_coupon', array( $this, 'hide_applied_coupon_label' ) );
 		add_filter( 'woocommerce_get_formatted_discount', array( $this, 'hide_coupon_code_in_discount' ), 10, 2 );
 		add_filter( 'woocommerce_cart_coupon_section_html', array( $this, 'hide_coupon_section' ) );
+		add_filter( 'woocommerce_coupon_get_code', array( $this, 'hide_coupon_get_code' ) );
 	}
 
 	/**
@@ -166,6 +167,20 @@ class CRT_Coupon {
 	}
 
 	/**
+	 * Hide coupon code from coupon get_code calls.
+	 * New filter to hide coupon code in additional places
+	 *
+	 * @param string $code The coupon code.
+	 * @return string
+	 */
+	public function hide_coupon_get_code( $code ) {
+		if ( self::COUPON_CODE === $code ) {
+			return '';
+		}
+		return $code;
+	}
+
+	/**
 	 * Hide coupon code from applied coupons display.
 	 *
 	 * @param string $coupon_code The coupon code.
@@ -173,7 +188,6 @@ class CRT_Coupon {
 	 */
 	public function hide_applied_coupon_label( $coupon_code ) {
 		if ( self::COUPON_CODE === $coupon_code ) {
-			// Don't return anything, this hides it from the list
 			return '';
 		}
 
@@ -208,13 +222,13 @@ class CRT_Coupon {
 		if ( 'percent' === $discount_type ) {
 			return sprintf(
 				/* translators: %s: discount percentage */
-				esc_html__( 'Limited Time Discount: %s%%', CRT_TEXT_DOMAIN ),
+				esc_html__( 'Limited Time Offer: %s%% off', CRT_TEXT_DOMAIN ),
 				floatval( $amount )
 			);
 		} else {
 			return sprintf(
 				/* translators: %s: discount amount */
-				esc_html__( 'Limited Time Discount: %s', CRT_TEXT_DOMAIN ),
+				esc_html__( 'Limited Time Offer: %s discount', CRT_TEXT_DOMAIN ),
 				wc_price( floatval( $amount ) )
 			);
 		}
