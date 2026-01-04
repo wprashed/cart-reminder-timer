@@ -52,6 +52,7 @@ class CRT_Coupon {
 		add_filter( 'woocommerce_order_item_get_formatted_meta_data', array( $this, 'hide_coupon_code_meta' ), 10, 2 );
 		add_filter( 'woocommerce_applied_coupon', array( $this, 'hide_applied_coupon_label' ) );
 		add_filter( 'woocommerce_get_formatted_discount', array( $this, 'hide_coupon_code_in_discount' ), 10, 2 );
+		add_filter( 'woocommerce_cart_coupon_section_html', array( $this, 'hide_coupon_section' ) );
 	}
 
 	/**
@@ -207,16 +208,26 @@ class CRT_Coupon {
 		if ( 'percent' === $discount_type ) {
 			return sprintf(
 				/* translators: %s: discount percentage */
-				esc_html__( 'Discount: %s%%', CRT_TEXT_DOMAIN ),
+				esc_html__( 'Limited Time Discount: %s%%', CRT_TEXT_DOMAIN ),
 				floatval( $amount )
 			);
 		} else {
 			return sprintf(
 				/* translators: %s: discount amount */
-				esc_html__( 'Discount: %s', CRT_TEXT_DOMAIN ),
+				esc_html__( 'Limited Time Discount: %s', CRT_TEXT_DOMAIN ),
 				wc_price( floatval( $amount ) )
 			);
 		}
+	}
+
+	/**
+	 * Hide coupon section from coupon display areas.
+	 *
+	 * @param string $html The coupon section HTML.
+	 * @return string
+	 */
+	public function hide_coupon_section( $html ) {
+		return '';
 	}
 
 	/**
