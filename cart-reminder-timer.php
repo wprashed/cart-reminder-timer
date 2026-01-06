@@ -2,13 +2,14 @@
 /**
  * Plugin Name: Cart Reminder Timer for WooCommerce
  * Description: Interactive countdown timer with time-limited discounts, email reminders, and cart abandonment tracking.
- * Version: 6.0
+ * Version: 1.0.0
  * Author: Rashed Hossain
  * Author URI: https://rashedhossain.dev
  * Text Domain: cart-reminder-timer
  * Domain Path: /languages
  * Requires at least: 5.0
  * Requires PHP: 7.4
+ * Required plugins: WooCommerce
  * WC requires at least: 3.0
  * WC tested up to: 8.0
  * License: GPL v2 or later
