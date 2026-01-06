@@ -1,19 +1,18 @@
 <?php
 /**
  * Plugin Name: Cart Reminder Timer for WooCommerce
- * Description: Interactive countdown timer with auto-apply coupons, email reminders, A/B testing and cart abandonment tracking.
- * Version: 1.0.0
+ * Description: Interactive countdown timer with time-limited discounts, email reminders, and cart abandonment tracking.
+ * Version: 6.0
  * Author: Rashed Hossain
- * Author URI: https://rashed.im
+ * Author URI: https://rashedhossain.dev
  * Text Domain: cart-reminder-timer
  * Domain Path: /languages
  * Requires at least: 5.0
  * Requires PHP: 7.4
- * WC requires at least: 7.0
+ * WC requires at least: 3.0
  * WC tested up to: 8.0
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Required plugins: WooCommerce
  *
  * @package Cart_Reminder_Timer_For_WooCommerce
  * @author Rashed Hossain
@@ -25,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Updated all WCRT_ constants to CRT_
  * Define plugin constants.
  */
 define( 'CRT_VERSION', '6.0' );
@@ -59,7 +57,6 @@ function crt_is_woocommerce_active() {
 
 /**
  * Initialize plugin on WooCommerce loaded.
- * Moved initialization to plugins_loaded hook with proper WooCommerce check
  *
  * @return void
  */
@@ -71,14 +68,14 @@ function crt_init_plugin() {
 
 	require_once CRT_PLUGIN_DIR . 'includes/class-crt-admin.php';
 	require_once CRT_PLUGIN_DIR . 'includes/class-crt-timer.php';
-	require_once CRT_PLUGIN_DIR . 'includes/class-crt-coupon.php';
+	require_once CRT_PLUGIN_DIR . 'includes/class-crt-discount.php';
 	require_once CRT_PLUGIN_DIR . 'includes/class-crt-email.php';
 	require_once CRT_PLUGIN_DIR . 'includes/class-crt-tracking.php';
 
 	// Initialize all classes only after includes are loaded.
 	CRT_Admin::get_instance();
 	CRT_Timer::get_instance();
-	CRT_Coupon::get_instance();
+	CRT_Discount::get_instance();
 	CRT_Email::get_instance();
 	CRT_Tracking::get_instance();
 }
@@ -135,7 +132,7 @@ function crt_enqueue_frontend_assets() {
 add_action( 'wp_enqueue_scripts', 'crt_enqueue_frontend_assets' );
 
 /**
- * Create database tables and default coupon on plugin activation.
+ * Create database tables on plugin activation.
  *
  * @return void
  */
@@ -145,13 +142,8 @@ function crt_activate_plugin() {
 	}
 
 	require_once CRT_PLUGIN_DIR . 'includes/class-crt-tracking.php';
-	require_once CRT_PLUGIN_DIR . 'includes/class-crt-coupon.php';
 
 	CRT_Tracking::create_tables();
-
-	if ( class_exists( 'WC_Coupon' ) ) {
-		CRT_Coupon::create_or_get_coupon();
-	}
 
 	flush_rewrite_rules();
 	wp_cache_flush();
