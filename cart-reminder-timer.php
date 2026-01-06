@@ -4,7 +4,7 @@
  * Description: Interactive countdown timer with time-limited discounts, email reminders, and cart abandonment tracking.
  * Version: 1.0.0
  * Author: Rashed Hossain
- * Author URI: https://rashedhossain.dev
+ * Author URI: https://rashed.im
  * Text Domain: cart-reminder-timer
  * Domain Path: /languages
  * Requires at least: 5.0
