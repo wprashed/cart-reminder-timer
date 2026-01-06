@@ -112,11 +112,10 @@ class CRT_Discount {
 			return;
 		}
 
-		foreach ( $cart->get_items() as $item ) {
-			$original_price = (float) $item->get_subtotal() / $item->get_quantity();
+		foreach ( $cart->get_cart_contents() as $item ) {
+			$original_price = (float) $item['data']->get_price();
 			$discounted_price = $this->calculate_discounted_price( $original_price );
-			$item->set_subtotal( $discounted_price * $item->get_quantity() );
-			$item->set_total( $discounted_price * $item->get_quantity() );
+			$item['data']->set_price( $discounted_price );
 		}
 	}
 
