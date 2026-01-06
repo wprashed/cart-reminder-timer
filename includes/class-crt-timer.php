@@ -37,28 +37,25 @@ class CRT_Timer {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp_footer', array( $this, 'inject_timer_data' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_timer_script' ) );
 		add_action( 'wp_ajax_crt_expire_discount', array( $this, 'expire_discount' ) );
 		add_action( 'wp_ajax_nopriv_crt_expire_discount', array( $this, 'expire_discount' ) );
 	}
 
 	/**
-	 * Inject timer data into page for JavaScript.
+	 * Enqueue timer script with inline data.
 	 *
 	 * @return void
 	 */
-	public function inject_timer_data() {
+	public function enqueue_timer_script() {
 		if ( ! $this->should_show_timer() ) {
 			return;
 		}
 
-		$timer_data = $this->get_timer_data();
+		wp_enqueue_script( 'crt-timer', CRT_PLUGIN_URL . 'assets/timer.js', array( 'jquery' ), CRT_VERSION, true );
 
-		?>
-		<script type="text/javascript">
-			window.CRT_DATA = <?php echo wp_json_encode( $timer_data ); ?>;
-		</script>
-		<?php
+		$timer_data = $this->get_timer_data();
+		wp_localize_script( 'crt-timer', 'CRT_DATA', $timer_data );
 	}
 
 	/**
