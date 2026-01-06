@@ -111,7 +111,7 @@ class CRT_Admin {
 			<div class="crt-admin-header">
 				<div class="crt-header-content">
 					<h1><?php esc_html_e( 'Cart Reminder Timer Settings', CRT_TEXT_DOMAIN ); ?></h1>
-					<p><?php esc_html_e( 'Configure your countdown timer and boost conversions', CRT_TEXT_DOMAIN ); ?></p>
+					<p><?php esc_html_e( 'Configure your countdown timer and time-limited discounts', CRT_TEXT_DOMAIN ); ?></p>
 				</div>
 			</div>
 
@@ -124,9 +124,9 @@ class CRT_Admin {
 							<span class="dashicons dashicons-admin-generic"></span>
 							<?php esc_html_e( 'General', CRT_TEXT_DOMAIN ); ?>
 						</button>
-						<button type="button" class="crt-tab-nav-item" data-tab="coupon">
+						<button type="button" class="crt-tab-nav-item" data-tab="discount">
 							<span class="dashicons dashicons-tag"></span>
-							<?php esc_html_e( 'Coupon', CRT_TEXT_DOMAIN ); ?>
+							<?php esc_html_e( 'Discount', CRT_TEXT_DOMAIN ); ?>
 						</button>
 						<button type="button" class="crt-tab-nav-item" data-tab="messages">
 							<span class="dashicons dashicons-format-chat"></span>
@@ -141,7 +141,7 @@ class CRT_Admin {
 					<div class="crt-tabs-content">
 						<?php
 						$this->render_general_tab();
-						$this->render_coupon_tab();
+						$this->render_discount_tab();
 						$this->render_messages_tab();
 						$this->render_advanced_tab();
 						?>
@@ -188,7 +188,7 @@ class CRT_Admin {
 						<span class="crt-input-addon"><?php esc_html_e( 'minutes', CRT_TEXT_DOMAIN ); ?></span>
 					</div>
 					<p class="crt-help-text">
-						<?php esc_html_e( 'How long items are reserved (1-60 minutes). Default: 15', CRT_TEXT_DOMAIN ); ?>
+						<?php esc_html_e( 'How long customers have to complete purchase (1-60 minutes). Default: 15', CRT_TEXT_DOMAIN ); ?>
 					</p>
 				</div>
 
@@ -209,7 +209,7 @@ class CRT_Admin {
 						</option>
 					</select>
 					<p class="crt-help-text">
-						<?php esc_html_e( 'Choose where the timer appears to customers', CRT_TEXT_DOMAIN ); ?>
+						<?php esc_html_e( 'Choose where the timer and discount appear to customers', CRT_TEXT_DOMAIN ); ?>
 					</p>
 				</div>
 
@@ -294,79 +294,63 @@ class CRT_Admin {
 	}
 
 	/**
-	 * Render coupon tab.
+	 * Render discount tab.
 	 *
 	 * @return void
 	 */
-	private function render_coupon_tab() {
-		$coupon_enabled = (int) crt_get_option( 'coupon', 0 );
-		$coupon_type = crt_get_option( 'coupon_type', 'percent' );
-		$coupon_amount = (float) crt_get_option( 'coupon_amount', 10 );
-		$max_usage = (int) crt_get_option( 'max_usage', 1 );
-		$autoclear = (int) crt_get_option( 'autoclear', 0 );
+	private function render_discount_tab() {
+		$discount_type = crt_get_option( 'discount_type', 'percent' );
+		$discount_amount = (float) crt_get_option( 'discount_amount', 10 );
 
 		?>
-		<div class="crt-tab-pane" id="crt-tab-coupon">
+		<div class="crt-tab-pane" id="crt-tab-discount">
 			<div class="crt-settings-section">
-				<h2><?php esc_html_e( 'Auto-Apply Coupon', CRT_TEXT_DOMAIN ); ?></h2>
+				<h2><?php esc_html_e( 'Time-Limited Discount', CRT_TEXT_DOMAIN ); ?></h2>
+
+				<p class="crt-info-text">
+					<?php esc_html_e( 'Configure the discount that customers receive when they complete their purchase before the timer expires.', CRT_TEXT_DOMAIN ); ?>
+				</p>
 
 				<div class="crt-form-group">
-					<label class="crt-checkbox-label">
-						<input type="checkbox" id="crt_coupon" name="crt_coupon" value="1" <?php checked( $coupon_enabled, 1 ); ?> />
-						<span><?php esc_html_e( 'Enable Auto-Apply Coupon on Timer Expiry', CRT_TEXT_DOMAIN ); ?></span>
-					</label>
-					<p class="crt-help-text">
-						<?php esc_html_e( 'Automatically apply a discount when timer expires', CRT_TEXT_DOMAIN ); ?>
-					</p>
-				</div>
-
-				<div class="crt-form-group">
-					<label for="crt_coupon_type">
+					<label for="crt_discount_type">
 						<?php esc_html_e( 'Discount Type', CRT_TEXT_DOMAIN ); ?>
+						<span class="crt-required">*</span>
 					</label>
-					<select id="crt_coupon_type" name="crt_coupon_type" class="crt-select">
-						<option value="percent" <?php selected( $coupon_type, 'percent' ); ?>>
+					<select id="crt_discount_type" name="crt_discount_type" class="crt-select">
+						<option value="percent" <?php selected( $discount_type, 'percent' ); ?>>
 							<?php esc_html_e( 'Percentage (%)', CRT_TEXT_DOMAIN ); ?>
 						</option>
-						<option value="fixed" <?php selected( $coupon_type, 'fixed' ); ?>>
+						<option value="fixed" <?php selected( $discount_type, 'fixed' ); ?>>
 							<?php esc_html_e( 'Fixed Amount', CRT_TEXT_DOMAIN ); ?> (<?php echo esc_html( get_woocommerce_currency_symbol() ); ?>)
 						</option>
 					</select>
+					<p class="crt-help-text">
+						<?php esc_html_e( 'Choose whether to discount by percentage or fixed amount', CRT_TEXT_DOMAIN ); ?>
+					</p>
 				</div>
 
 				<div class="crt-form-group">
-					<label for="crt_coupon_amount">
+					<label for="crt_discount_amount">
 						<?php esc_html_e( 'Discount Amount', CRT_TEXT_DOMAIN ); ?>
+						<span class="crt-required">*</span>
 					</label>
 					<div class="crt-input-group">
-						<input type="number" id="crt_coupon_amount" name="crt_coupon_amount" value="<?php echo esc_attr( $coupon_amount ); ?>" step="0.01" min="0" class="crt-input-text" />
-						<span class="crt-input-addon" id="crt_coupon_unit"><?php echo esc_html( $coupon_type === 'percent' ? '%' : get_woocommerce_currency_symbol() ); ?></span>
+						<input type="number" id="crt_discount_amount" name="crt_discount_amount" value="<?php echo esc_attr( $discount_amount ); ?>" step="0.01" min="0" class="crt-input-text" />
+						<span class="crt-input-addon" id="crt_discount_unit"><?php echo esc_html( $discount_type === 'percent' ? '%' : get_woocommerce_currency_symbol() ); ?></span>
 					</div>
-				</div>
-
-				<div class="crt-form-group">
-					<label for="crt_max_usage">
-						<?php esc_html_e( 'Max Usage Per User', CRT_TEXT_DOMAIN ); ?>
-					</label>
-					<input type="number" id="crt_max_usage" name="crt_max_usage" value="<?php echo esc_attr( $max_usage ); ?>" min="1" class="crt-input-number" />
 					<p class="crt-help-text">
-						<?php esc_html_e( 'How many times each user can use the coupon', CRT_TEXT_DOMAIN ); ?>
+						<?php esc_html_e( 'The discount amount applied to all products in the cart', CRT_TEXT_DOMAIN ); ?>
 					</p>
 				</div>
 
-				<div class="crt-form-group">
-					<label class="crt-checkbox-label">
-						<input type="checkbox" name="crt_autoclear" value="1" <?php checked( $autoclear, 1 ); ?> />
-						<span><?php esc_html_e( 'Auto Clear Cart on Expiry', CRT_TEXT_DOMAIN ); ?></span>
-					</label>
-					<p class="crt-help-text">
-						<?php esc_html_e( 'Automatically clear all items when timer expires (if coupon not applied)', CRT_TEXT_DOMAIN ); ?>
-					</p>
-				</div>
-
-				<div class="crt-info-box">
-					<strong><?php esc_html_e( 'Note:', CRT_TEXT_DOMAIN ); ?></strong>
-					<?php esc_html_e( 'Coupon code will be automatically created and managed by the plugin.', CRT_TEXT_DOMAIN ); ?>
+				<div class="crt-info-box crt-info-success">
+					<strong><?php esc_html_e( 'How It Works:', CRT_TEXT_DOMAIN ); ?></strong>
+					<ul style="margin: 10px 0; padding-left: 20px;">
+						<li><?php esc_html_e( 'Timer starts when customer adds items to cart', CRT_TEXT_DOMAIN ); ?></li>
+						<li><?php esc_html_e( 'Discount is automatically applied to all products', CRT_TEXT_DOMAIN ); ?></li>
+						<li><?php esc_html_e( 'Discount expires when timer runs out', CRT_TEXT_DOMAIN ); ?></li>
+						<li><?php esc_html_e( 'Customer must checkout before time expires to get the discount', CRT_TEXT_DOMAIN ); ?></li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -379,11 +363,11 @@ class CRT_Admin {
 	 * @return void
 	 */
 	private function render_messages_tab() {
-		$msg_user = crt_get_option( 'message_user', __( 'Hurry! Your items are reserved.', CRT_TEXT_DOMAIN ) );
-		$msg_guest = crt_get_option( 'message_guest', __( 'Limited time offer! Complete checkout now.', CRT_TEXT_DOMAIN ) );
+		$discount_type = crt_get_option( 'discount_type', 'percent' );
+		$msg_user = crt_get_option( 'message_user', __( 'Hurry! You have a special discount - complete your purchase before time expires!', CRT_TEXT_DOMAIN ) );
+		$msg_guest = crt_get_option( 'message_guest', __( 'Limited time offer! Get your discount - checkout now!', CRT_TEXT_DOMAIN ) );
 		$enable_sound = (int) crt_get_option( 'enable_sound', 0 );
 		$enable_email = (int) crt_get_option( 'enable_email', 0 );
-		$ab_testing = (int) crt_get_option( 'ab_testing', 0 );
 
 		?>
 		<div class="crt-tab-pane" id="crt-tab-messages">
@@ -394,7 +378,7 @@ class CRT_Admin {
 					<label for="crt_message_user">
 						<?php esc_html_e( 'Message for Logged-In Users', CRT_TEXT_DOMAIN ); ?>
 					</label>
-					<input type="text" id="crt_message_user" name="crt_message_user" value="<?php echo esc_attr( $msg_user ); ?>" class="crt-input-text crt-input-large" maxlength="100" />
+					<input type="text" id="crt_message_user" name="crt_message_user" value="<?php echo esc_attr( $msg_user ); ?>" class="crt-input-text crt-input-large" maxlength="150" />
 					<p class="crt-help-text">
 						<?php esc_html_e( 'Personalized message for logged-in customers', CRT_TEXT_DOMAIN ); ?>
 					</p>
@@ -404,7 +388,7 @@ class CRT_Admin {
 					<label for="crt_message_guest">
 						<?php esc_html_e( 'Message for Guests', CRT_TEXT_DOMAIN ); ?>
 					</label>
-					<input type="text" id="crt_message_guest" name="crt_message_guest" value="<?php echo esc_attr( $msg_guest ); ?>" class="crt-input-text crt-input-large" maxlength="100" />
+					<input type="text" id="crt_message_guest" name="crt_message_guest" value="<?php echo esc_attr( $msg_guest ); ?>" class="crt-input-text crt-input-large" maxlength="150" />
 					<p class="crt-help-text">
 						<?php esc_html_e( 'Generic message for guest customers', CRT_TEXT_DOMAIN ); ?>
 					</p>
@@ -430,21 +414,7 @@ class CRT_Admin {
 						<span><?php esc_html_e( 'Enable Email Reminders', CRT_TEXT_DOMAIN ); ?></span>
 					</label>
 					<p class="crt-help-text">
-						<?php esc_html_e( 'Send email reminder before cart expires (logged-in users only)', CRT_TEXT_DOMAIN ); ?>
-					</p>
-				</div>
-			</div>
-
-			<div class="crt-settings-section">
-				<h2><?php esc_html_e( 'A/B Testing', CRT_TEXT_DOMAIN ); ?></h2>
-
-				<div class="crt-form-group">
-					<label class="crt-checkbox-label">
-						<input type="checkbox" name="crt_ab_testing" value="1" <?php checked( $ab_testing, 1 ); ?> />
-						<span><?php esc_html_e( 'Enable A/B Testing', CRT_TEXT_DOMAIN ); ?></span>
-					</label>
-					<p class="crt-help-text">
-						<?php esc_html_e( 'Test different messages and track which converts better', CRT_TEXT_DOMAIN ); ?>
+						<?php esc_html_e( 'Send email reminder before discount expires (logged-in users only)', CRT_TEXT_DOMAIN ); ?>
 					</p>
 				</div>
 			</div>
@@ -461,21 +431,14 @@ class CRT_Admin {
 		?>
 		<div class="crt-tab-pane" id="crt-tab-advanced">
 			<div class="crt-settings-section">
-				<h2><?php esc_html_e( 'Analytics & Tracking', CRT_TEXT_DOMAIN ); ?></h2>
-
-				<div class="crt-info-box crt-info-primary">
-					<strong><?php esc_html_e( 'Cart Abandonment Tracking', CRT_TEXT_DOMAIN ); ?></strong>
-					<p>
-						<?php esc_html_e( 'This plugin tracks abandoned carts and their conversion status. View detailed analytics in WooCommerce > Reports > Orders.', CRT_TEXT_DOMAIN ); ?>
-					</p>
-				</div>
+				<h2><?php esc_html_e( 'Advanced Settings', CRT_TEXT_DOMAIN ); ?></h2>
 
 				<div class="crt-info-box crt-info-success">
 					<strong><?php esc_html_e( 'Getting Started', CRT_TEXT_DOMAIN ); ?></strong>
 					<ol>
-						<li><?php esc_html_e( 'Configure timer duration in General tab', CRT_TEXT_DOMAIN ); ?></li>
+						<li><?php esc_html_e( 'Set timer duration in General tab', CRT_TEXT_DOMAIN ); ?></li>
+						<li><?php esc_html_e( 'Configure discount amount in Discount tab', CRT_TEXT_DOMAIN ); ?></li>
 						<li><?php esc_html_e( 'Customize messages in Messages tab', CRT_TEXT_DOMAIN ); ?></li>
-						<li><?php esc_html_e( 'Enable coupon and set discount in Coupon tab', CRT_TEXT_DOMAIN ); ?></li>
 						<li><?php esc_html_e( 'Save and test on your cart page', CRT_TEXT_DOMAIN ); ?></li>
 					</ol>
 				</div>
@@ -514,16 +477,12 @@ class CRT_Admin {
 		crt_update_option( 'min_cart', isset( $_POST['crt_min_cart'] ) ? (float) $_POST['crt_min_cart'] : 0 );
 		crt_update_option( 'show_progress', isset( $_POST['crt_show_progress'] ) ? 1 : 0 );
 		crt_update_option( 'dismissable', isset( $_POST['crt_dismissable'] ) ? 1 : 0 );
-		crt_update_option( 'coupon', isset( $_POST['crt_coupon'] ) ? 1 : 0 );
-		crt_update_option( 'coupon_type', isset( $_POST['crt_coupon_type'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_coupon_type'] ) ) : 'percent' );
-		crt_update_option( 'coupon_amount', isset( $_POST['crt_coupon_amount'] ) ? (float) $_POST['crt_coupon_amount'] : 10 );
-		crt_update_option( 'max_usage', isset( $_POST['crt_max_usage'] ) ? (int) $_POST['crt_max_usage'] : 1 );
-		crt_update_option( 'autoclear', isset( $_POST['crt_autoclear'] ) ? 1 : 0 );
-		crt_update_option( 'message_user', isset( $_POST['crt_message_user'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_message_user'] ) ) : __( 'Hurry! Your items are reserved.', CRT_TEXT_DOMAIN ) );
-		crt_update_option( 'message_guest', isset( $_POST['crt_message_guest'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_message_guest'] ) ) : __( 'Limited time offer! Complete checkout now.', CRT_TEXT_DOMAIN ) );
+		crt_update_option( 'discount_type', isset( $_POST['crt_discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_discount_type'] ) ) : 'percent' );
+		crt_update_option( 'discount_amount', isset( $_POST['crt_discount_amount'] ) ? (float) $_POST['crt_discount_amount'] : 10 );
+		crt_update_option( 'message_user', isset( $_POST['crt_message_user'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_message_user'] ) ) : __( 'Hurry! You have a special discount - complete your purchase before time expires!', CRT_TEXT_DOMAIN ) );
+		crt_update_option( 'message_guest', isset( $_POST['crt_message_guest'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_message_guest'] ) ) : __( 'Limited time offer! Get your discount - checkout now!', CRT_TEXT_DOMAIN ) );
 		crt_update_option( 'enable_sound', isset( $_POST['crt_enable_sound'] ) ? 1 : 0 );
 		crt_update_option( 'enable_email', isset( $_POST['crt_enable_email'] ) ? 1 : 0 );
-		crt_update_option( 'ab_testing', isset( $_POST['crt_ab_testing'] ) ? 1 : 0 );
 
 		wp_cache_flush();
 
