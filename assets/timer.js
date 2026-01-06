@@ -1,7 +1,3 @@
-/**
- * Cart Reminder Timer - Frontend Countdown
- */
-
 ;((jQuery) => {
   let mounted = false
   let remaining = 0
@@ -108,14 +104,20 @@
     const div = document.createElement("div")
     div.className = "crt-timer " + window.CRT_DATA.color_scheme
 
+    const discountText =
+      window.CRT_DATA.discountInfo.type === "percent"
+        ? window.CRT_DATA.discountInfo.amount + "% off"
+        : window.CRT_DATA.discountInfo.amount + " " + window.CRT_DATA.currency_symbol + " off"
+
     const html = `
-			${window.CRT_DATA.show_progress ? '<div class="crt-progress-container"><div class="crt-progress-bar"></div></div>' : ""}
-			<div class="crt-content">
-				<span class="crt-message">⏳ ${window.CRT_DATA.messages[window.CRT_DATA.variant][window.CRT_DATA.loggedIn ? "user" : "guest"]}</span>
-				<strong class="crt-timer-value"><span class="crt-time">00:00</span></strong>
-				${window.CRT_DATA.dismissable ? '<button type="button" class="crt-dismiss-btn">✕ Dismiss</button>' : ""}
-			</div>
-		`
+      ${window.CRT_DATA.show_progress ? '<div class="crt-progress-container"><div class="crt-progress-bar"></div></div>' : ""}
+      <div class="crt-content">
+        <span class="crt-message">⏳ ${window.CRT_DATA.messages[window.CRT_DATA.variant][window.CRT_DATA.loggedIn ? "user" : "guest"]}</span>
+        <div class="crt-discount-badge">${discountText}</div>
+        <strong class="crt-timer-value"><span class="crt-time">00:00</span></strong>
+        ${window.CRT_DATA.dismissable ? '<button type="button" class="crt-dismiss-btn">✕ Dismiss</button>' : ""}
+      </div>
+    `
 
     div.innerHTML = html
 
@@ -135,23 +137,23 @@
   }
 
   /**
+   * Updated AJAX action from crt_remove_expired_coupon to crt_expire_discount
    * Start countdown timer
    */
   function startCountdown(targetSpan, timerDiv, progressBar) {
     function tick() {
       if (remaining <= 0) {
         timerExpired = true
-        timerDiv.innerHTML = "⚠️ " + window.CRT_DATA.expiredMessage
+        timerDiv.innerHTML = `<div class="crt-expired-notice">⚠️ <strong>${window.CRT_DATA.expiredMessage}</strong><br><span class="crt-expired-notice-subtitle">Your special discount has expired. Add items again to get a new discount.</span></div>`
         timerDiv.classList.add("expired")
         clearInterval(timerInterval)
 
-        // Remove coupon via AJAX
         jQuery.post(window.CRT_DATA.ajax_url, {
-          action: "crt_remove_expired_coupon",
+          action: "crt_expire_discount",
           nonce: window.CRT_DATA.nonce,
         })
 
-        // Update page to reflect coupon removal
+        // Update page to reflect discount removal
         jQuery("body").trigger("wc_update_cart")
 
         if (localStorage.getItem("crt_dismissed")) {
@@ -164,14 +166,13 @@
         return
       }
 
-      targetSpan.textContent = formatTime(remaining)
+      targetSpan.textContent = formatTime(Math.floor(remaining))
 
       if (progressBar) {
         const progress = (remaining / totalDuration) * 100
         progressBar.style.width = progress + "%"
       }
 
-      // Add critical class when 1 minute left
       if (remaining === 60 && window.CRT_DATA.enable_sound) {
         playAlertSound()
         timerDiv.classList.add("critical")
