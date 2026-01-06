@@ -324,6 +324,12 @@
   accent-color: var(--crt-primary);
   border-radius: 4px;
   flex-shrink: 0;
+  margin: 0 10px 0 0;
+}
+
+.crt-checkbox-label input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--crt-primary);
+  outline-offset: 2px;
 }
 
 /* Modern color options with visual previews */
@@ -333,6 +339,7 @@
   gap: 16px;
 }
 
+/* Improved color option styling to remove visual borders and ensure proper focus states */
 .crt-color-option {
   display: flex;
   align-items: center;
@@ -358,6 +365,13 @@
   cursor: pointer;
   accent-color: var(--crt-primary);
   flex-shrink: 0;
+  margin: 0;
+}
+
+/* Add focus outline only on keyboard focus for better a11y */
+.crt-color-option input[type="radio"]:focus-visible {
+  outline: 2px solid var(--crt-primary);
+  outline-offset: 2px;
 }
 
 .crt-color-preview {
