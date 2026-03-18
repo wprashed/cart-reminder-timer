@@ -2,7 +2,7 @@
 /**
  * CRT_Admin class - Handle admin settings and configuration.
  *
- * @package Cart_Reminder_Timer_For_WooCommerce
+ * @package Dealicious_Cart_Reminder_Timer
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -49,8 +49,8 @@ class CRT_Admin {
 	public function add_menu() {
 		add_submenu_page(
 			'woocommerce',
-			__( 'Cart Reminder Timer', CRT_TEXT_DOMAIN ),
-			__( 'Cart Reminder Timer', CRT_TEXT_DOMAIN ),
+			__( 'Dealicious - Cart Reminder Timer for WooCommerce', CRT_TEXT_DOMAIN ),
+			__( 'Dealicious - Cart Reminder Timer for WooCommerce', CRT_TEXT_DOMAIN ),
 			'manage_options',
 			'crt-settings',
 			array( $this, 'render_settings_page' )
@@ -110,7 +110,7 @@ class CRT_Admin {
 		<div class="crt-admin-container">
 			<div class="crt-admin-header">
 				<div class="crt-header-content">
-					<h1><?php esc_html_e( 'Cart Reminder Timer Settings', CRT_TEXT_DOMAIN ); ?></h1>
+					<h1><?php esc_html_e( 'Dealicious - Cart Reminder Timer for WooCommerce Settings', CRT_TEXT_DOMAIN ); ?></h1>
 					<p><?php esc_html_e( 'Configure your countdown timer and time-limited discounts', CRT_TEXT_DOMAIN ); ?></p>
 				</div>
 			</div>
