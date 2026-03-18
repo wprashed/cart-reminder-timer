@@ -1,5 +1,5 @@
 /**
- * Cart Reminder Timer - Admin Panel JS
+ * Dealicious - Cart Reminder Timer for WooCommerce admin panel JS
  */
 
 ;(($) => {
