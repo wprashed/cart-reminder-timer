@@ -2,7 +2,7 @@
 /**
  * CRT_Coupon class - Handle coupon creation and application.
  *
- * @package Cart_Reminder_Timer_For_WooCommerce
+ * @package Dealicious_Cart_Reminder_Timer
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
