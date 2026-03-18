@@ -114,21 +114,21 @@ class CRT_Timer {
 			'A' => array(
 				'user'  => crt_get_option(
 					'message_user',
-					sprintf( __( 'Hurry! You have %s off - complete your purchase before time expires!', CRT_TEXT_DOMAIN ), $discount_info['message'] )
+					sprintf( __( 'Hurry! You have %s off - complete your purchase before time expires!', 'dealicious-cart-reminder-timer-for-woocommerce' ), $discount_info['message'] )
 				),
 				'guest' => crt_get_option(
 					'message_guest',
-					sprintf( __( 'Limited time offer! Get %s off - checkout now!', CRT_TEXT_DOMAIN ), $discount_info['message'] )
+					sprintf( __( 'Limited time offer! Get %s off - checkout now!', 'dealicious-cart-reminder-timer-for-woocommerce' ), $discount_info['message'] )
 				),
 			),
 			'B' => array(
 				'user'  => crt_get_option(
 					'message_user_b',
-					sprintf( __( 'Don\'t miss out! %s available - buy before timer expires!', CRT_TEXT_DOMAIN ), $discount_info['message'] )
+					sprintf( __( 'Don\'t miss out! %s available - buy before timer expires!', 'dealicious-cart-reminder-timer-for-woocommerce' ), $discount_info['message'] )
 				),
 				'guest' => crt_get_option(
 					'message_guest_b',
-					sprintf( __( 'Act now! %s discount waiting for you!', CRT_TEXT_DOMAIN ), $discount_info['message'] )
+					sprintf( __( 'Act now! %s discount waiting for you!', 'dealicious-cart-reminder-timer-for-woocommerce' ), $discount_info['message'] )
 				),
 			),
 		);
@@ -157,7 +157,7 @@ class CRT_Timer {
 			'enable_sound'     => (int) crt_get_option( 'enable_sound', 0 ),
 			'ajax_url'         => esc_url_raw( admin_url( 'admin-ajax.php' ) ),
 			'nonce'            => wp_create_nonce( 'crt_timer_nonce' ),
-			'expiredMessage'   => esc_html__( 'Timer expired! Your special discount has been removed.', CRT_TEXT_DOMAIN ),
+			'expiredMessage'   => esc_html__( 'Timer expired! Your special discount has been removed.', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 		);
 	}
 
@@ -170,11 +170,11 @@ class CRT_Timer {
 		check_ajax_referer( 'crt_timer_nonce', 'nonce' );
 
 		if ( ! function_exists( 'WC' ) || ! WC()->session ) {
-			wp_send_json_error( array( 'message' => __( 'Session not available', CRT_TEXT_DOMAIN ) ) );
+			wp_send_json_error( array( 'message' => __( 'Session not available', 'dealicious-cart-reminder-timer-for-woocommerce' ) ) );
 		}
 
 		WC()->session->set( 'crt_timer_expired', true );
 
-		wp_send_json_success( array( 'message' => __( 'Timer expired', CRT_TEXT_DOMAIN ) ) );
+		wp_send_json_success( array( 'message' => __( 'Timer expired', 'dealicious-cart-reminder-timer-for-woocommerce' ) ) );
 	}
 }
