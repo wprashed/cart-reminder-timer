@@ -222,13 +222,13 @@ class CRT_Coupon {
 		if ( 'percent' === $discount_type ) {
 			return sprintf(
 				/* translators: %s: discount percentage */
-				esc_html__( 'Limited Time Offer: %s%% off', CRT_TEXT_DOMAIN ),
+				esc_html__( 'Limited Time Offer: %s%% off', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 				floatval( $amount )
 			);
 		} else {
 			return sprintf(
 				/* translators: %s: discount amount */
-				esc_html__( 'Limited Time Offer: %s discount', CRT_TEXT_DOMAIN ),
+				esc_html__( 'Limited Time Offer: %s discount', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 				wc_price( floatval( $amount ) )
 			);
 		}
