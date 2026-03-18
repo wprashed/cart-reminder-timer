@@ -2,7 +2,7 @@
 /**
  * CRT_Discount class - Handle product-specific time-limited discounts.
  *
- * @package Cart_Reminder_Timer_For_WooCommerce
+ * @package Dealicious_Cart_Reminder_Timer
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
