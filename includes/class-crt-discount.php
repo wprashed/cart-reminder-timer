@@ -165,7 +165,7 @@ class CRT_Discount {
 		check_ajax_referer( 'crt_timer_nonce', 'nonce' );
 
 		if ( ! function_exists( 'WC' ) || ! WC()->session ) {
-			wp_send_json_error( array( 'message' => __( 'Session not available', CRT_TEXT_DOMAIN ) ) );
+			wp_send_json_error( array( 'message' => __( 'Session not available', 'dealicious-cart-reminder-timer-for-woocommerce' ) ) );
 		}
 
 		WC()->session->set( 'crt_timer_expired', true );
@@ -174,7 +174,7 @@ class CRT_Discount {
 		// Trigger cart update to refresh totals
 		WC()->cart->calculate_totals();
 
-		wp_send_json_success( array( 'message' => __( 'Discount expired', CRT_TEXT_DOMAIN ) ) );
+		wp_send_json_success( array( 'message' => __( 'Discount expired', 'dealicious-cart-reminder-timer-for-woocommerce' ) ) );
 	}
 
 	/**
@@ -196,7 +196,7 @@ class CRT_Discount {
 			return array(
 				'amount'  => 0,
 				'type'    => 'percent',
-				'message' => __( 'Discount has expired', CRT_TEXT_DOMAIN ),
+				'message' => __( 'Discount has expired', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 			);
 		}
 
@@ -210,7 +210,7 @@ class CRT_Discount {
 				'%s%s %s',
 				$discount_amount,
 				'percent' === $discount_type ? '%' : get_woocommerce_currency_symbol(),
-				__( 'off until timer expires', CRT_TEXT_DOMAIN )
+				__( 'off until timer expires', 'dealicious-cart-reminder-timer-for-woocommerce' )
 			),
 		);
 	}
