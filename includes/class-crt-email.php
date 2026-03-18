@@ -112,7 +112,7 @@ class CRT_Email {
 
 		$subject = sprintf(
 			/* translators: %s: Site name */
-			__( 'Your cart is about to expire! - %s', CRT_TEXT_DOMAIN ),
+			__( 'Your cart is about to expire! - %s', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 			get_bloginfo( 'name' )
 		);
 
@@ -122,14 +122,14 @@ class CRT_Email {
 			<p>%s</p>
 			<p><a href="%s" style="background-color: #007cba; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">%s</a></p>
 			<p>%s</p>',
-			esc_html__( 'Complete Your Purchase', CRT_TEXT_DOMAIN ),
+			esc_html__( 'Complete Your Purchase', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 			esc_html( $user_name ),
-			esc_html__( 'Your reserved items are about to expire. Click the button below to complete your purchase and receive your discount!', CRT_TEXT_DOMAIN ),
+			esc_html__( 'Your reserved items are about to expire. Click the button below to complete your purchase and receive your discount!', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 			esc_url_raw( $cart_url ),
-			esc_html__( 'Go to Cart', CRT_TEXT_DOMAIN ),
+			esc_html__( 'Go to Cart', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 			sprintf(
 				/* translators: %s: Cart value */
-				esc_html__( 'Cart Value: %s', CRT_TEXT_DOMAIN ),
+				esc_html__( 'Cart Value: %s', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 				wp_kses_post( wc_price( $cart->cart_value ) )
 			)
 		);
