@@ -1,6 +1,6 @@
-# Cart Reminder Timer for WooCommerce
+# Dealicious - Cart Reminder Timer for WooCommerce
 
-A powerful WooCommerce plugin that reduces cart abandonment and boosts conversions with an interactive countdown timer and automatic time-limited discounts.
+A WooCommerce plugin that reduces cart abandonment and boosts conversions with an interactive countdown timer and automatic time-limited discounts.
 
 ## Table of Contents
 
@@ -46,7 +46,7 @@ A powerful WooCommerce plugin that reduces cart abandonment and boosts conversio
 
 ### Step 1: Download the Plugin
 
-Download the latest version of Cart Reminder Timer for WooCommerce from the WordPress Plugin Directory or your custom repository.
+Download the latest version of Dealicious - Cart Reminder Timer for WooCommerce from the WordPress Plugin Directory or your custom repository.
 
 ### Step 2: Upload to WordPress
 
@@ -60,18 +60,18 @@ Alternatively, extract the plugin folder and upload it via FTP to `/wp-content/p
 ### Step 3: Activate the Plugin
 
 1. Navigate to **Plugins** in the admin menu
-2. Find **Cart Reminder Timer for WooCommerce**
+2. Find **Dealicious - Cart Reminder Timer for WooCommerce**
 3. Click **Activate**
 
 ### Step 4: Verify Installation
 
-After activation, you should see a new **Cart Reminder Timer** option under the **WooCommerce** menu in the admin sidebar.
+After activation, you should see a new **Dealicious - Cart Reminder Timer for WooCommerce** option under the **WooCommerce** menu in the admin sidebar.
 
 ## Quick Start Guide
 
 ### Minimal Setup (2 minutes)
 
-1. Go to **WooCommerce > Cart Reminder Timer**
+1. Go to **WooCommerce > Dealicious - Cart Reminder Timer for WooCommerce**
 2. Keep default settings or adjust timer duration (default: 15 minutes)
 3. Keep default discount (default: 10% off)
 4. Click **Save Settings**
@@ -89,7 +89,7 @@ After activation, you should see a new **Cart Reminder Timer** option under the 
 
 ### Step 1: Configure General Settings
 
-1. Navigate to **WooCommerce > Cart Reminder Timer**
+1. Navigate to **WooCommerce > Dealicious - Cart Reminder Timer for WooCommerce**
 2. Click on the **General** tab
 3. Adjust the following settings:
 
@@ -306,7 +306,7 @@ apply_filters( 'crt_email_reminder_content', $content, $user );
 **Problem:** Timer doesn't appear on cart or checkout page
 
 **Solutions:**
-1. Verify plugin is activated: **Plugins > Cart Reminder Timer** should show "Deactivate"
+1. Verify plugin is activated: **Plugins > Dealicious - Cart Reminder Timer for WooCommerce** should show "Deactivate"
 2. Check minimum cart amount setting - may be too high
 3. Verify timer is enabled for current page:
    - Go to **Settings > Show Timer On**
@@ -344,7 +344,7 @@ apply_filters( 'crt_email_reminder_content', $content, $user );
 **Problem:** Timer displays but styling looks wrong
 
 **Solutions:**
-1. Go to **WooCommerce > Cart Reminder Timer**
+1. Go to **WooCommerce > Dealicious - Cart Reminder Timer for WooCommerce**
 2. Check that color scheme is selected
 3. Clear all caches (WordPress, browser, caching plugins)
 4. Disable all CSS minification plugins temporarily
@@ -358,7 +358,7 @@ apply_filters( 'crt_email_reminder_content', $content, $user );
 **Solutions:**
 1. The plugin is lightweight - likely not the cause
 2. Check if other plugins are conflicting
-3. Deactivate all plugins except WooCommerce and Cart Reminder Timer
+3. Deactivate all plugins except WooCommerce and Dealicious - Cart Reminder Timer for WooCommerce
 4. Reactivate plugins one by one to find conflict
 5. Contact hosting provider to increase PHP memory limit
 
