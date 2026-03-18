@@ -2,7 +2,7 @@
 /**
  * Prevent direct access to this file.
  *
- * @package Cart_Reminder_Timer
+ * @package Dealicious_Cart_Reminder_Timer
  */
 
 // Exit if accessed directly.
