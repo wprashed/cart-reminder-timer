@@ -2,7 +2,7 @@
 /**
  * CRT_Tracking class - Track abandoned carts and conversions.
  *
- * @package Cart_Reminder_Timer_For_WooCommerce
+ * @package Dealicious_Cart_Reminder_Timer
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -51,20 +51,18 @@ class CRT_Tracking {
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name = $wpdb->prefix . 'crt_abandoned_carts';
 
-		$sql = $wpdb->prepare(
-			"CREATE TABLE IF NOT EXISTS {$table_name} (
-				id bigint(20) NOT NULL AUTO_INCREMENT,
-				user_id bigint(20),
-				cart_value decimal(10,2),
-				variant varchar(1),
-				created_at datetime DEFAULT CURRENT_TIMESTAMP,
-				reminded tinyint(1) DEFAULT 0,
-				converted tinyint(1) DEFAULT 0,
-				PRIMARY KEY (id),
-				KEY user_id (user_id),
-				KEY created_at (created_at)
-			) {$charset_collate};"
-		);
+		$sql = "CREATE TABLE {$table_name} (
+			id bigint(20) NOT NULL AUTO_INCREMENT,
+			user_id bigint(20),
+			cart_value decimal(10,2),
+			variant varchar(1),
+			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			reminded tinyint(1) DEFAULT 0,
+			converted tinyint(1) DEFAULT 0,
+			PRIMARY KEY (id),
+			KEY user_id (user_id),
+			KEY created_at (created_at)
+		) {$charset_collate};";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
