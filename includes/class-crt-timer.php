@@ -2,7 +2,7 @@
 /**
  * CRT_Timer class - Handle countdown timer display and logic.
  *
- * @package Cart_Reminder_Timer_For_WooCommerce
+ * @package Dealicious_Cart_Reminder_Timer
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Cart Reminder Timer class.
+ * Dealicious cart reminder timer class.
  */
 class CRT_Timer {
 
