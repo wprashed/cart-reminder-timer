@@ -90,7 +90,7 @@ class CRT_Tracking {
 		global $wpdb;
 		$table = $wpdb->prefix . 'crt_abandoned_carts';
 
-		$wpdb->insert(
+		$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$table,
 			array(
 				'user_id'    => get_current_user_id(),
@@ -120,7 +120,7 @@ class CRT_Tracking {
 		global $wpdb;
 		$table = $wpdb->prefix . 'crt_abandoned_carts';
 
-		$wpdb->update(
+		$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$table,
 			array( 'converted' => 1 ),
 			array( 'user_id' => $order->get_user_id() ),
