@@ -33,20 +33,6 @@ define( 'CRT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CRT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Load plugin text domain for translations.
- *
- * @return void
- */
-function crt_load_plugin_textdomain() {
-	load_plugin_textdomain(
-		'dealicious-cart-reminder-timer-for-woocommerce',
-		false,
-		dirname( plugin_basename( __FILE__ ) ) . '/languages'
-	);
-}
-add_action( 'plugins_loaded', 'crt_load_plugin_textdomain' );
-
-/**
  * Check if WooCommerce is active.
  *
  * @return bool
