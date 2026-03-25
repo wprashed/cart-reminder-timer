@@ -37,4 +37,5 @@ foreach ( $option_names as $option_name ) {
 wp_clear_scheduled_hook( 'crt_send_email_reminders' );
 
 $table_name = $wpdb->prefix . 'crt_abandoned_carts';
-$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+$table_name_sql = esc_sql( $table_name );
+$wpdb->query( "DROP TABLE IF EXISTS `{$table_name_sql}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.NotPrepared
