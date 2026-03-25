@@ -64,14 +64,15 @@ class CRT_Email {
 
 		global $wpdb;
 		$table = $wpdb->prefix . 'crt_abandoned_carts';
+		$table_sql = esc_sql( $table );
 
 		// Get carts that will expire in 5 minutes and haven't been reminded.
 		$duration = (int) crt_get_option( 'duration', 15 );
 		$remind_before = $duration - 5;
 
-		$carts = $wpdb->get_results(
+		$carts = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE reminded = 0 AND created_at < DATE_SUB(NOW(), INTERVAL %d MINUTE)",
+				"SELECT * FROM `{$table_sql}` WHERE reminded = 0 AND created_at < DATE_SUB(NOW(), INTERVAL %d MINUTE)",
 				$remind_before
 			)
 		);
@@ -89,7 +90,7 @@ class CRT_Email {
 			$this->send_reminder_email( $user, $cart );
 
 			// Mark as reminded.
-			$wpdb->update(
+			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 				$table,
 				array( 'reminded' => 1 ),
 				array( 'id' => $cart->id ),
