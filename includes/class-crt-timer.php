@@ -102,7 +102,7 @@ class CRT_Timer {
 		// Get or set A/B variant.
 		$variant = WC()->session->get( 'crt_variant' );
 		if ( ! $variant ) {
-			$variant = rand( 0, 1 ) ? 'A' : 'B';
+			$variant = wp_rand( 0, 1 ) ? 'A' : 'B';
 			WC()->session->set( 'crt_variant', $variant );
 		}
 
@@ -114,20 +114,24 @@ class CRT_Timer {
 			'A' => array(
 				'user'  => crt_get_option(
 					'message_user',
+					/* translators: %s: Discount message such as "10% off until timer expires". */
 					sprintf( __( 'Hurry! You have %s off - complete your purchase before time expires!', 'dealicious-cart-reminder-timer-for-woocommerce' ), $discount_info['message'] )
 				),
 				'guest' => crt_get_option(
 					'message_guest',
+					/* translators: %s: Discount message such as "10% off until timer expires". */
 					sprintf( __( 'Limited time offer! Get %s off - checkout now!', 'dealicious-cart-reminder-timer-for-woocommerce' ), $discount_info['message'] )
 				),
 			),
 			'B' => array(
 				'user'  => crt_get_option(
 					'message_user_b',
+					/* translators: %s: Discount message such as "10% off until timer expires". */
 					sprintf( __( 'Don\'t miss out! %s available - buy before timer expires!', 'dealicious-cart-reminder-timer-for-woocommerce' ), $discount_info['message'] )
 				),
 				'guest' => crt_get_option(
 					'message_guest_b',
+					/* translators: %s: Discount message such as "10% off until timer expires". */
 					sprintf( __( 'Act now! %s discount waiting for you!', 'dealicious-cart-reminder-timer-for-woocommerce' ), $discount_info['message'] )
 				),
 			),
