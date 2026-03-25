@@ -277,7 +277,7 @@ class CRT_Coupon {
 			WC()->session->__unset( 'crt_timer_expired' );
 		} else {
 			// This ensures timer continues from where it was, not restarting
-			WC()->session->set( 'crt_variant', rand( 0, 1 ) ? 'A' : 'B' );
+			WC()->session->set( 'crt_variant', wp_rand( 0, 1 ) ? 'A' : 'B' );
 			WC()->session->__unset( 'crt_coupon_applied' );
 			WC()->session->__unset( 'crt_timer_expired' );
 		}
