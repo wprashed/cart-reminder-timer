@@ -102,7 +102,11 @@ class CRT_Admin {
 			wp_die( esc_html__( 'Access denied.', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
 		}
 
-		if ( isset( $_POST['crt_nonce'] ) ) {
+		if (
+			'POST' === strtoupper( $_SERVER['REQUEST_METHOD'] ?? '' ) &&
+			isset( $_POST['crt_nonce'] ) &&
+			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['crt_nonce'] ) ), 'crt_save_settings' )
+		) {
 			$this->save_settings();
 		}
 
