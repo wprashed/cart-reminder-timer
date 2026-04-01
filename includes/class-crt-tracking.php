@@ -1,6 +1,6 @@
 <?php
 /**
- * CRT_Tracking class - Track abandoned carts and conversions.
+ * DEALCARE_CRT_Tracking class - Track abandoned carts and conversions.
  *
  * @package Dealicious_Cart_Reminder_Timer
  */
@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Cart tracking class.
  */
-class CRT_Tracking {
+class DEALCARE_CRT_Tracking {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var CRT_Tracking|null
+	 * @var DEALCARE_CRT_Tracking|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return CRT_Tracking
+	 * @return DEALCARE_CRT_Tracking
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -49,7 +49,7 @@ class CRT_Tracking {
 	public static function create_tables() {
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = $wpdb->prefix . 'crt_abandoned_carts';
+		$table_name = $wpdb->prefix . 'dealcare_crt_abandoned_carts';
 
 		$sql = "CREATE TABLE {$table_name} (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -83,25 +83,25 @@ class CRT_Tracking {
 		}
 
 		// Skip if already tracked in this session.
-		if ( WC()->session->get( 'crt_tracked' ) ) {
+		if ( WC()->session->get( 'dealcare_crt_tracked' ) ) {
 			return;
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'crt_abandoned_carts';
+		$table = $wpdb->prefix . 'dealcare_crt_abandoned_carts';
 
 		$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$table,
 			array(
 				'user_id'    => get_current_user_id(),
 				'cart_value' => WC()->cart->get_subtotal(),
-				'variant'    => WC()->session->get( 'crt_variant' ) ?: 'A',
+				'variant'    => WC()->session->get( 'dealcare_crt_variant' ) ?: 'A',
 				'created_at' => current_time( 'mysql' ),
 			),
 			array( '%d', '%f', '%s', '%s' )
 		);
 
-		WC()->session->set( 'crt_tracked', 1 );
+		WC()->session->set( 'dealcare_crt_tracked', 1 );
 	}
 
 	/**
@@ -118,7 +118,7 @@ class CRT_Tracking {
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'crt_abandoned_carts';
+		$table = $wpdb->prefix . 'dealcare_crt_abandoned_carts';
 
 		$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$table,
