@@ -1,6 +1,6 @@
 <?php
 /**
- * CRT_Admin class - Handle admin settings and configuration.
+ * DEALCARE_CRT_Admin class - Handle admin settings and configuration.
  *
  * @package Dealicious_Cart_Reminder_Timer
  */
@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Admin settings class.
  */
-class CRT_Admin {
+class DEALCARE_CRT_Admin {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var CRT_Admin|null
+	 * @var DEALCARE_CRT_Admin|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return CRT_Admin
+	 * @return DEALCARE_CRT_Admin
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -52,7 +52,7 @@ class CRT_Admin {
 			__( 'Dealicious - Cart Reminder Timer for WooCommerce', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 			__( 'Dealicious - Cart Reminder Timer for WooCommerce', 'dealicious-cart-reminder-timer-for-woocommerce' ),
 			'manage_options',
-			'crt-settings',
+			'dealcare-crt-settings',
 			array( $this, 'render_settings_page' )
 		);
 	}
@@ -64,28 +64,28 @@ class CRT_Admin {
 	 */
 	public function enqueue_assets() {
 		$current_screen = get_current_screen();
-		if ( ! $current_screen || 'woocommerce_page_crt-settings' !== $current_screen->id ) {
+		if ( ! $current_screen || 'woocommerce_page_dealcare-crt-settings' !== $current_screen->id ) {
 			return;
 		}
 
 		wp_enqueue_style(
-			'crt-admin',
-			CRT_PLUGIN_URL . 'assets/admin.css',
+			'dealcare-crt-admin',
+			DEALCARE_CRT_PLUGIN_URL . 'assets/admin.css',
 			array(),
-			CRT_VERSION
+			DEALCARE_CRT_VERSION
 		);
 
 		wp_enqueue_script(
-			'crt-admin',
-			CRT_PLUGIN_URL . 'assets/admin.js',
+			'dealcare-crt-admin',
+			DEALCARE_CRT_PLUGIN_URL . 'assets/admin.js',
 			array( 'jquery' ),
-			CRT_VERSION,
+			DEALCARE_CRT_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'crt-admin',
-			'crtAdminData',
+			'dealcare-crt-admin',
+			'dealcareCrtAdminData',
 			array(
 				'currencySymbol' => esc_html( get_woocommerce_currency_symbol() ),
 			)
@@ -104,8 +104,8 @@ class CRT_Admin {
 
 		if (
 			'POST' === strtoupper( $_SERVER['REQUEST_METHOD'] ?? '' ) &&
-			isset( $_POST['crt_nonce'] ) &&
-			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['crt_nonce'] ) ), 'crt_save_settings' )
+			isset( $_POST['dealcare_crt_nonce'] ) &&
+			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['dealcare_crt_nonce'] ) ), 'dealcare_crt_save_settings' )
 		) {
 			$this->save_settings();
 		}
@@ -121,7 +121,7 @@ class CRT_Admin {
 
 			<div class="crt-admin-body">
 				<form method="post" class="crt-settings-form">
-					<?php wp_nonce_field( 'crt_save_settings', 'crt_nonce' ); ?>
+					<?php wp_nonce_field( 'dealcare_crt_save_settings', 'dealcare_crt_nonce' ); ?>
 
 					<div class="crt-tabs-nav">
 						<button type="button" class="crt-tab-nav-item active" data-tab="general">
@@ -169,13 +169,13 @@ class CRT_Admin {
 	 * @return void
 	 */
 	private function render_general_tab() {
-		$duration = (int) crt_get_option( 'duration', 15 );
-		$show_on = crt_get_option( 'show_on', 'both' );
-		$position = crt_get_option( 'position', 'top' );
-		$color_scheme = crt_get_option( 'color_scheme', 'danger' );
-		$show_progress = (int) crt_get_option( 'show_progress', 1 );
-		$dismissable = (int) crt_get_option( 'dismissable', 0 );
-		$min_cart = (float) crt_get_option( 'min_cart', 0 );
+		$duration = (int) dealcare_crt_get_option( 'duration', 15 );
+		$show_on = dealcare_crt_get_option( 'show_on', 'both' );
+		$position = dealcare_crt_get_option( 'position', 'top' );
+		$color_scheme = dealcare_crt_get_option( 'color_scheme', 'danger' );
+		$show_progress = (int) dealcare_crt_get_option( 'show_progress', 1 );
+		$dismissable = (int) dealcare_crt_get_option( 'dismissable', 0 );
+		$min_cart = (float) dealcare_crt_get_option( 'min_cart', 0 );
 
 		?>
 		<div class="crt-tab-pane active" id="crt-tab-general">
@@ -303,8 +303,8 @@ class CRT_Admin {
 	 * @return void
 	 */
 	private function render_discount_tab() {
-		$discount_type = crt_get_option( 'discount_type', 'percent' );
-		$discount_amount = (float) crt_get_option( 'discount_amount', 10 );
+		$discount_type = dealcare_crt_get_option( 'discount_type', 'percent' );
+		$discount_amount = (float) dealcare_crt_get_option( 'discount_amount', 10 );
 
 		?>
 		<div class="crt-tab-pane" id="crt-tab-discount">
@@ -367,11 +367,11 @@ class CRT_Admin {
 	 * @return void
 	 */
 	private function render_messages_tab() {
-		$discount_type = crt_get_option( 'discount_type', 'percent' );
-		$msg_user = crt_get_option( 'message_user', __( 'Hurry! You have a special discount - complete your purchase before time expires!', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
-		$msg_guest = crt_get_option( 'message_guest', __( 'Limited time offer! Get your discount - checkout now!', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
-		$enable_sound = (int) crt_get_option( 'enable_sound', 0 );
-		$enable_email = (int) crt_get_option( 'enable_email', 0 );
+		$discount_type = dealcare_crt_get_option( 'discount_type', 'percent' );
+		$msg_user = dealcare_crt_get_option( 'message_user', __( 'Hurry! You have a special discount - complete your purchase before time expires!', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
+		$msg_guest = dealcare_crt_get_option( 'message_guest', __( 'Limited time offer! Get your discount - checkout now!', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
+		$enable_sound = (int) dealcare_crt_get_option( 'enable_sound', 0 );
+		$enable_email = (int) dealcare_crt_get_option( 'enable_email', 0 );
 
 		?>
 		<div class="crt-tab-pane" id="crt-tab-messages">
@@ -468,25 +468,25 @@ class CRT_Admin {
 	 * @return void
 	 */
 	private function save_settings() {
-		check_admin_referer( 'crt_save_settings', 'crt_nonce' );
+		check_admin_referer( 'dealcare_crt_save_settings', 'dealcare_crt_nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'Access denied.', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
 		}
 
-		crt_update_option( 'duration', isset( $_POST['crt_duration'] ) ? (int) $_POST['crt_duration'] : 15 );
-		crt_update_option( 'show_on', isset( $_POST['crt_show_on'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_show_on'] ) ) : 'both' );
-		crt_update_option( 'position', isset( $_POST['crt_position'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_position'] ) ) : 'top' );
-		crt_update_option( 'color_scheme', isset( $_POST['crt_color_scheme'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_color_scheme'] ) ) : 'danger' );
-		crt_update_option( 'min_cart', isset( $_POST['crt_min_cart'] ) ? (float) $_POST['crt_min_cart'] : 0 );
-		crt_update_option( 'show_progress', isset( $_POST['crt_show_progress'] ) ? 1 : 0 );
-		crt_update_option( 'dismissable', isset( $_POST['crt_dismissable'] ) ? 1 : 0 );
-		crt_update_option( 'discount_type', isset( $_POST['crt_discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_discount_type'] ) ) : 'percent' );
-		crt_update_option( 'discount_amount', isset( $_POST['crt_discount_amount'] ) ? (float) $_POST['crt_discount_amount'] : 10 );
-		crt_update_option( 'message_user', isset( $_POST['crt_message_user'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_message_user'] ) ) : __( 'Hurry! You have a special discount - complete your purchase before time expires!', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
-		crt_update_option( 'message_guest', isset( $_POST['crt_message_guest'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_message_guest'] ) ) : __( 'Limited time offer! Get your discount - checkout now!', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
-		crt_update_option( 'enable_sound', isset( $_POST['crt_enable_sound'] ) ? 1 : 0 );
-		crt_update_option( 'enable_email', isset( $_POST['crt_enable_email'] ) ? 1 : 0 );
+		dealcare_crt_update_option( 'duration', isset( $_POST['crt_duration'] ) ? (int) $_POST['crt_duration'] : 15 );
+		dealcare_crt_update_option( 'show_on', isset( $_POST['crt_show_on'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_show_on'] ) ) : 'both' );
+		dealcare_crt_update_option( 'position', isset( $_POST['crt_position'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_position'] ) ) : 'top' );
+		dealcare_crt_update_option( 'color_scheme', isset( $_POST['crt_color_scheme'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_color_scheme'] ) ) : 'danger' );
+		dealcare_crt_update_option( 'min_cart', isset( $_POST['crt_min_cart'] ) ? (float) $_POST['crt_min_cart'] : 0 );
+		dealcare_crt_update_option( 'show_progress', isset( $_POST['crt_show_progress'] ) ? 1 : 0 );
+		dealcare_crt_update_option( 'dismissable', isset( $_POST['crt_dismissable'] ) ? 1 : 0 );
+		dealcare_crt_update_option( 'discount_type', isset( $_POST['crt_discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_discount_type'] ) ) : 'percent' );
+		dealcare_crt_update_option( 'discount_amount', isset( $_POST['crt_discount_amount'] ) ? (float) $_POST['crt_discount_amount'] : 10 );
+		dealcare_crt_update_option( 'message_user', isset( $_POST['crt_message_user'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_message_user'] ) ) : __( 'Hurry! You have a special discount - complete your purchase before time expires!', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
+		dealcare_crt_update_option( 'message_guest', isset( $_POST['crt_message_guest'] ) ? sanitize_text_field( wp_unslash( $_POST['crt_message_guest'] ) ) : __( 'Limited time offer! Get your discount - checkout now!', 'dealicious-cart-reminder-timer-for-woocommerce' ) );
+		dealcare_crt_update_option( 'enable_sound', isset( $_POST['crt_enable_sound'] ) ? 1 : 0 );
+		dealcare_crt_update_option( 'enable_email', isset( $_POST['crt_enable_email'] ) ? 1 : 0 );
 
 		wp_cache_flush();
 
