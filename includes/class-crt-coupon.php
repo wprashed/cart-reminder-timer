@@ -1,6 +1,6 @@
 <?php
 /**
- * CRT_Coupon class - Handle coupon creation and application.
+ * DEALCARE_CRT_Coupon class - Handle coupon creation and application.
  *
  * @package Dealicious_Cart_Reminder_Timer
  */
@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Coupon management class.
  */
-class CRT_Coupon {
+class DEALCARE_CRT_Coupon {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var CRT_Coupon|null
+	 * @var DEALCARE_CRT_Coupon|null
 	 */
 	private static $instance = null;
 
@@ -26,12 +26,12 @@ class CRT_Coupon {
 	 *
 	 * @var string
 	 */
-	const COUPON_CODE = 'CRT-TIMER';
+	const COUPON_CODE = 'DEALCARE-CRT-TIMER';
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return CRT_Coupon
+	 * @return DEALCARE_CRT_Coupon
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -100,7 +100,7 @@ class CRT_Coupon {
 			return;
 		}
 
-		if ( ! crt_get_option( 'coupon' ) ) {
+		if ( ! dealcare_crt_get_option( 'coupon' ) ) {
 			return;
 		}
 
@@ -108,11 +108,11 @@ class CRT_Coupon {
 			return;
 		}
 
-		if ( WC()->session->get( 'crt_timer_expired' ) ) {
+		if ( WC()->session->get( 'dealcare_crt_timer_expired' ) ) {
 			return;
 		}
 
-		$coupon_cache_key = 'crt_coupon_obj_' . CRT_VERSION;
+		$coupon_cache_key = 'dealcare_crt_coupon_obj_' . DEALCARE_CRT_VERSION;
 		$coupon = wp_cache_get( $coupon_cache_key );
 
 		if ( false === $coupon ) {
@@ -124,9 +124,9 @@ class CRT_Coupon {
 			return;
 		}
 
-		$discount_type = sanitize_text_field( crt_get_option( 'coupon_type', 'percent' ) );
-		$discount_amount = (float) crt_get_option( 'coupon_amount', 10 );
-		$usage_limit = (int) crt_get_option( 'max_usage', 1 );
+		$discount_type = sanitize_text_field( dealcare_crt_get_option( 'coupon_type', 'percent' ) );
+		$discount_amount = (float) dealcare_crt_get_option( 'coupon_amount', 10 );
+		$usage_limit = (int) dealcare_crt_get_option( 'max_usage', 1 );
 
 		if ( $coupon->get_discount_type() !== $discount_type ||
 			 abs( (float) $coupon->get_amount() - $discount_amount ) > 0.01 ||
@@ -142,12 +142,12 @@ class CRT_Coupon {
 		$code = $coupon->get_code();
 
 		// Apply coupon if not already applied.
-		if ( ! WC()->session->get( 'crt_coupon_applied' ) ) {
+		if ( ! WC()->session->get( 'dealcare_crt_coupon_applied' ) ) {
 			if ( $cart->has_discount( $code ) ) {
 				$cart->remove_coupon( $code );
 			}
 			$cart->apply_coupon( $code );
-			WC()->session->set( 'crt_coupon_applied', true );
+			WC()->session->set( 'dealcare_crt_coupon_applied', true );
 		}
 	}
 
@@ -271,15 +271,15 @@ class CRT_Coupon {
 		}
 
 		if ( WC()->cart->is_empty() ) {
-			WC()->session->__unset( 'crt_start' );
-			WC()->session->__unset( 'crt_variant' );
-			WC()->session->__unset( 'crt_coupon_applied' );
-			WC()->session->__unset( 'crt_timer_expired' );
+			WC()->session->__unset( 'dealcare_crt_start' );
+			WC()->session->__unset( 'dealcare_crt_variant' );
+			WC()->session->__unset( 'dealcare_crt_coupon_applied' );
+			WC()->session->__unset( 'dealcare_crt_timer_expired' );
 		} else {
 			// This ensures timer continues from where it was, not restarting
-			WC()->session->set( 'crt_variant', wp_rand( 0, 1 ) ? 'A' : 'B' );
-			WC()->session->__unset( 'crt_coupon_applied' );
-			WC()->session->__unset( 'crt_timer_expired' );
+			WC()->session->set( 'dealcare_crt_variant', wp_rand( 0, 1 ) ? 'A' : 'B' );
+			WC()->session->__unset( 'dealcare_crt_coupon_applied' );
+			WC()->session->__unset( 'dealcare_crt_timer_expired' );
 		}
 	}
 }
