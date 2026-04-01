@@ -3,7 +3,7 @@
  */
 
 ;(($) => {
-  const crtAdminData = window.crtAdminData || {
+  const dealcareCrtAdminData = window.dealcareCrtAdminData || {
     currencySymbol: "$",
   }
 
@@ -48,7 +48,7 @@
       if ("percent" === this.value) {
         couponUnit.textContent = "%"
       } else {
-        couponUnit.textContent = crtAdminData.currencySymbol || "$"
+        couponUnit.textContent = dealcareCrtAdminData.currencySymbol || "$"
       }
     })
   }
