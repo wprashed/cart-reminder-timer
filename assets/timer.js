@@ -23,7 +23,7 @@
       return
     }
 
-    if (!window.CRT_DATA) {
+    if (!window.dealcareCrtData) {
       return
     }
 
@@ -38,7 +38,7 @@
     }
 
     const timerElement = createTimerElement()
-    if (window.CRT_DATA.position === "top") {
+    if (window.dealcareCrtData.position === "top") {
       container.prepend(timerElement)
     } else {
       container.appendChild(timerElement)
@@ -56,7 +56,7 @@
    */
   function getCartCheckoutContainer() {
     // Cart page containers
-    if (window.CRT_DATA.show_on === "cart" || window.CRT_DATA.show_on === "both") {
+    if (window.dealcareCrtData.show_on === "cart" || window.dealcareCrtData.show_on === "both") {
       const cartContainers = [
         ".woocommerce-cart-form",
         ".wc-block-cart",
@@ -74,7 +74,7 @@
     }
 
     // Checkout page containers
-    if (window.CRT_DATA.show_on === "checkout" || window.CRT_DATA.show_on === "both") {
+    if (window.dealcareCrtData.show_on === "checkout" || window.dealcareCrtData.show_on === "both") {
       const checkoutContainers = [
         ".wc-block-checkout",
         ".checkout",
@@ -102,34 +102,34 @@
    */
   function createTimerElement() {
     const div = document.createElement("div")
-    div.className = "crt-timer " + window.CRT_DATA.color_scheme
+    div.className = "crt-timer " + window.dealcareCrtData.color_scheme
 
     const discountText =
-      window.CRT_DATA.discountInfo.type === "percent"
-        ? window.CRT_DATA.discountInfo.amount + "% off"
-        : window.CRT_DATA.discountInfo.amount + " " + window.CRT_DATA.currency_symbol + " off"
+      window.dealcareCrtData.discountInfo.type === "percent"
+        ? window.dealcareCrtData.discountInfo.amount + "% off"
+        : window.dealcareCrtData.discountInfo.amount + " " + window.dealcareCrtData.currency_symbol + " off"
 
     const html = `
-      ${window.CRT_DATA.show_progress ? '<div class="crt-progress-container"><div class="crt-progress-bar"></div></div>' : ""}
+      ${window.dealcareCrtData.show_progress ? '<div class="crt-progress-container"><div class="crt-progress-bar"></div></div>' : ""}
       <div class="crt-content">
-        <span class="crt-message">⏳ ${window.CRT_DATA.messages[window.CRT_DATA.variant][window.CRT_DATA.loggedIn ? "user" : "guest"]}</span>
+        <span class="crt-message">⏳ ${window.dealcareCrtData.messages[window.dealcareCrtData.variant][window.dealcareCrtData.loggedIn ? "user" : "guest"]}</span>
         <div class="crt-discount-badge">${discountText}</div>
         <strong class="crt-timer-value"><span class="crt-time">00:00</span></strong>
-        ${window.CRT_DATA.dismissable ? '<button type="button" class="crt-dismiss-btn">✕ Dismiss</button>' : ""}
+        ${window.dealcareCrtData.dismissable ? '<button type="button" class="crt-dismiss-btn">✕ Dismiss</button>' : ""}
       </div>
     `
 
     div.innerHTML = html
 
     // Attach dismiss handler
-    if (window.CRT_DATA.dismissable) {
+    if (window.dealcareCrtData.dismissable) {
       const dismissBtn = div.querySelector(".crt-dismiss-btn")
       dismissBtn.addEventListener("click", (e) => {
         e.preventDefault()
         isDismissed = true
         div.style.display = "none"
         createReopenButton()
-        localStorage.setItem("crt_dismissed", "1")
+        localStorage.setItem("dealcare_crt_dismissed", "1")
       })
     }
 
@@ -137,27 +137,27 @@
   }
 
   /**
-   * Updated AJAX action from crt_remove_expired_coupon to crt_expire_discount
+   * Updated AJAX action from the legacy coupon flow to the prefixed timer-expire action.
    * Start countdown timer
    */
   function startCountdown(targetSpan, timerDiv, progressBar) {
     function tick() {
       if (remaining <= 0) {
         timerExpired = true
-        timerDiv.innerHTML = `<div class="crt-expired-notice">⚠️ <strong>${window.CRT_DATA.expiredMessage}</strong><br><span class="crt-expired-notice-subtitle">Your special discount has expired. Add items again to get a new discount.</span></div>`
+        timerDiv.innerHTML = `<div class="crt-expired-notice">⚠️ <strong>${window.dealcareCrtData.expiredMessage}</strong><br><span class="crt-expired-notice-subtitle">Your special discount has expired. Add items again to get a new discount.</span></div>`
         timerDiv.classList.add("expired")
         clearInterval(timerInterval)
 
-        jQuery.post(window.CRT_DATA.ajax_url, {
-          action: "crt_expire_discount",
-          nonce: window.CRT_DATA.nonce,
+        jQuery.post(window.dealcareCrtData.ajax_url, {
+          action: "dealcare_crt_expire_discount",
+          nonce: window.dealcareCrtData.nonce,
         })
 
         // Update page to reflect discount removal
         jQuery("body").trigger("wc_update_cart")
 
-        if (localStorage.getItem("crt_dismissed")) {
-          localStorage.removeItem("crt_dismissed")
+        if (localStorage.getItem("dealcare_crt_dismissed")) {
+          localStorage.removeItem("dealcare_crt_dismissed")
           const reopenBtn = document.querySelector(".crt-reopen-btn")
           if (reopenBtn) {
             reopenBtn.style.display = "none"
@@ -173,7 +173,7 @@
         progressBar.style.width = progress + "%"
       }
 
-      if (remaining === 60 && window.CRT_DATA.enable_sound) {
+      if (remaining === 60 && window.dealcareCrtData.enable_sound) {
         playAlertSound()
         timerDiv.classList.add("critical")
       }
@@ -212,7 +212,7 @@
           reopenBtn.remove()
         }, 400)
       }
-      localStorage.removeItem("crt_dismissed")
+      localStorage.removeItem("dealcare_crt_dismissed")
     })
 
     document.body.appendChild(reopenBtn)
@@ -247,11 +247,11 @@
    * Initialize on document ready
    */
   jQuery(() => {
-    if (window.CRT_DATA) {
-      remaining = window.CRT_DATA.remaining
-      totalDuration = window.CRT_DATA.duration
+    if (window.dealcareCrtData) {
+      remaining = window.dealcareCrtData.remaining
+      totalDuration = window.dealcareCrtData.duration
 
-      if (localStorage.getItem("crt_dismissed")) {
+      if (localStorage.getItem("dealcare_crt_dismissed")) {
         isDismissed = true
       }
 
@@ -263,9 +263,9 @@
    * Remount timer on cart update
    */
   jQuery(document.body).on("updated_cart_totals wc_fragments_loaded added_to_cart removed_from_cart", () => {
-    if (!isDismissed && window.CRT_DATA) {
-      remaining = window.CRT_DATA.remaining
-      totalDuration = window.CRT_DATA.duration
+    if (!isDismissed && window.dealcareCrtData) {
+      remaining = window.dealcareCrtData.remaining
+      totalDuration = window.dealcareCrtData.duration
 
       mounted = false
       clearInterval(timerInterval)
