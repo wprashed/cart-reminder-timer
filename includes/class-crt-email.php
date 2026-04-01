@@ -1,6 +1,6 @@
 <?php
 /**
- * CRT_Email class - Handle email reminders for abandoned carts.
+ * DEALCARE_CRT_Email class - Handle email reminders for abandoned carts.
  *
  * @package Dealicious_Cart_Reminder_Timer
  */
@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Email reminder class.
  */
-class CRT_Email {
+class DEALCARE_CRT_Email {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var CRT_Email|null
+	 * @var DEALCARE_CRT_Email|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return CRT_Email
+	 * @return DEALCARE_CRT_Email
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -46,10 +46,10 @@ class CRT_Email {
 	 * @return void
 	 */
 	public function schedule_reminders() {
-		if ( ! wp_next_scheduled( 'crt_send_email_reminders' ) ) {
-			wp_schedule_event( time(), 'hourly', 'crt_send_email_reminders' );
+		if ( ! wp_next_scheduled( 'dealcare_crt_send_email_reminders' ) ) {
+			wp_schedule_event( time(), 'hourly', 'dealcare_crt_send_email_reminders' );
 		}
-		add_action( 'crt_send_email_reminders', array( $this, 'send_abandoned_reminders' ) );
+		add_action( 'dealcare_crt_send_email_reminders', array( $this, 'send_abandoned_reminders' ) );
 	}
 
 	/**
@@ -58,16 +58,16 @@ class CRT_Email {
 	 * @return void
 	 */
 	public function send_abandoned_reminders() {
-		if ( ! crt_get_option( 'enable_email' ) ) {
+		if ( ! dealcare_crt_get_option( 'enable_email' ) ) {
 			return;
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'crt_abandoned_carts';
+		$table = $wpdb->prefix . 'dealcare_crt_abandoned_carts';
 		$table_sql = esc_sql( $table );
 
 		// Get carts that will expire in 5 minutes and haven't been reminded.
-		$duration = (int) crt_get_option( 'duration', 15 );
+		$duration = (int) dealcare_crt_get_option( 'duration', 15 );
 		$remind_before = $duration - 5;
 
 		$carts = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
