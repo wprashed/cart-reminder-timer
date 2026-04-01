@@ -1,6 +1,6 @@
 <?php
 /**
- * CRT_Discount class - Handle product-specific time-limited discounts.
+ * DEALCARE_CRT_Discount class - Handle product-specific time-limited discounts.
  *
  * @package Dealicious_Cart_Reminder_Timer
  */
@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Direct discount management class (replaces coupon system).
  */
-class CRT_Discount {
+class DEALCARE_CRT_Discount {
 
 	/**
 	 * Instance of the class.
 	 *
-	 * @var CRT_Discount|null
+	 * @var DEALCARE_CRT_Discount|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get single instance of class.
 	 *
-	 * @return CRT_Discount
+	 * @return DEALCARE_CRT_Discount
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -41,8 +41,8 @@ class CRT_Discount {
 		add_filter( 'woocommerce_product_variation_get_price', array( $this, 'apply_discount_to_price' ), 10, 2 );
 		add_filter( 'woocommerce_cart_item_subtotal', array( $this, 'apply_discount_to_subtotal' ), 10, 3 );
 		add_filter( 'woocommerce_before_calculate_totals', array( $this, 'apply_discount_to_cart_items' ) );
-		add_action( 'wp_ajax_crt_expire_discount', array( $this, 'expire_discount' ) );
-		add_action( 'wp_ajax_nopriv_crt_expire_discount', array( $this, 'expire_discount' ) );
+		add_action( 'wp_ajax_dealcare_crt_expire_discount', array( $this, 'expire_discount' ) );
+		add_action( 'wp_ajax_nopriv_dealcare_crt_expire_discount', array( $this, 'expire_discount' ) );
 	}
 
 	/**
@@ -56,16 +56,16 @@ class CRT_Discount {
 		}
 
 		// If timer has expired, discount is not valid
-		if ( WC()->session->get( 'crt_timer_expired' ) ) {
+		if ( WC()->session->get( 'dealcare_crt_timer_expired' ) ) {
 			return false;
 		}
 
-		$start_time = WC()->session->get( 'crt_start' );
+		$start_time = WC()->session->get( 'dealcare_crt_start' );
 		if ( ! $start_time ) {
 			return false;
 		}
 
-		$duration = (int) crt_get_option( 'duration', 15 ) * 60;
+		$duration = (int) dealcare_crt_get_option( 'duration', 15 ) * 60;
 		$elapsed = time() - $start_time;
 
 		return $elapsed < $duration;
@@ -146,8 +146,8 @@ class CRT_Discount {
 			return $price;
 		}
 
-		$discount_type = sanitize_text_field( crt_get_option( 'discount_type', 'percent' ) );
-		$discount_amount = (float) crt_get_option( 'discount_amount', 10 );
+		$discount_type = sanitize_text_field( dealcare_crt_get_option( 'discount_type', 'percent' ) );
+		$discount_amount = (float) dealcare_crt_get_option( 'discount_amount', 10 );
 
 		if ( 'percent' === $discount_type ) {
 			return $price * ( 1 - ( $discount_amount / 100 ) );
@@ -162,14 +162,14 @@ class CRT_Discount {
 	 * @return void
 	 */
 	public function expire_discount() {
-		check_ajax_referer( 'crt_timer_nonce', 'nonce' );
+		check_ajax_referer( 'dealcare_crt_timer_nonce', 'nonce' );
 
 		if ( ! function_exists( 'WC' ) || ! WC()->session ) {
 			wp_send_json_error( array( 'message' => __( 'Session not available', 'dealicious-cart-reminder-timer-for-woocommerce' ) ) );
 		}
 
-		WC()->session->set( 'crt_timer_expired', true );
-		WC()->session->set( 'crt_start', null );
+		WC()->session->set( 'dealcare_crt_timer_expired', true );
+		WC()->session->set( 'dealcare_crt_start', null );
 
 		// Trigger cart update to refresh totals
 		WC()->cart->calculate_totals();
@@ -200,8 +200,8 @@ class CRT_Discount {
 			);
 		}
 
-		$discount_type = sanitize_text_field( crt_get_option( 'discount_type', 'percent' ) );
-		$discount_amount = (float) crt_get_option( 'discount_amount', 10 );
+		$discount_type = sanitize_text_field( dealcare_crt_get_option( 'discount_type', 'percent' ) );
+		$discount_amount = (float) dealcare_crt_get_option( 'discount_amount', 10 );
 
 		return array(
 			'amount'  => $discount_amount,
