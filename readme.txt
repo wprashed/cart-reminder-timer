@@ -15,15 +15,22 @@ Boost WooCommerce conversions with countdown timers, automatic cart discounts, a
 
 **Dealicious - Cart Reminder Timer for WooCommerce** helps reduce cart abandonment and create urgency on WooCommerce cart and checkout pages.
 
-Core features include:
+Key features:
 
-- **Interactive Countdown Timer** - Eye-catching animated timer with customizable colors and messages
-- **Automatic Discounts** - Apply percentage or fixed cart discounts while the timer is active
-- **Email Reminders** - Send automated reminders to logged-in customers before the timer expires
-- **Cart Tracking** - Monitor abandoned carts and conversions
-- **Responsive Design** - Works perfectly on mobile, tablet, and desktop
-- **Sound Alerts** - Optional audio notification when 1 minute remains
-- **Easy Configuration** - Simple admin panel with tabbed interface
+- ⏳ **Interactive Countdown Timer**: Display an animated, configurable timer on cart and checkout to create urgency.
+- 💸 **Automatic Discounts**: Apply percentage or fixed discounts while the timer is active to boost conversions.
+- ✉️ **Email Reminders**: Send reminder emails to logged-in customers shortly before the timer expires.
+- 📈 **Cart Tracking**: Track abandoned carts and conversions to understand what is working.
+- 📱 **Responsive Design**: Looks great on mobile, tablet, and desktop with a clean, modern layout.
+- 🔔 **Sound Alerts**: Optionally play a sound when 1 minute remains to increase urgency.
+- ⚙️ **Easy Configuration**: Configure duration, display rules, discount, and messages from a simple admin panel.
+- 🎨 **Multiple Color Schemes**: Choose from Red (Danger), Yellow (Warning), Blue (Info), or Green (Success).
+- 🧭 **Flexible Display Options**: Show the timer on cart only, checkout only, or both.
+- 🧾 **Minimum Cart Amount**: Only show the timer when the cart exceeds a configurable minimum.
+- 🫥 **Dismissable Timer**: Let customers dismiss the timer and reopen it using a floating button.
+- 📊 **Progress Bar**: Show an animated progress bar that reflects remaining time.
+- 💬 **Customizable Messages**: Set different messages for logged-in users and guests (A/B variant supported).
+- 🧠 **Analytics & Insights**: Track abandonment and conversions to measure impact over time.
 
 == Installation ==
 
@@ -37,16 +44,6 @@ Core features include:
 - WordPress 5.0 or higher
 - WooCommerce 6.0 or higher
 - PHP 7.4 or higher
-
-== Features ==
-
-- **Multiple Color Schemes** - Choose from Red (Danger), Yellow (Warning), Blue (Info), or Green (Success)
-- **Flexible Display Options** - Show on cart only, checkout only, or both
-- **Minimum Cart Amount** - Only show timer when cart exceeds a minimum value
-- **Dismissable Timer** - Allow users to close and reopen the timer
-- **Progress Bar** - Visual representation of remaining time
-- **Customizable Messages** - Different messages for logged-in users and guests
-- **Professional Analytics** - Track cart abandonment and conversion rates
 
 == Configuration ==
 

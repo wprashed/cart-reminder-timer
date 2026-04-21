@@ -63,37 +63,39 @@ class DEALCARE_CRT_Email {
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'dealcare_crt_abandoned_carts';
-		$table_sql = esc_sql( $table );
 
-		// Get carts that will expire in 5 minutes and haven't been reminded.
-		$duration = (int) dealcare_crt_get_option( 'duration', 15 );
+		$table = esc_sql( $wpdb->prefix . 'dealcare_crt_abandoned_carts' );
+
+		$duration      = (int) dealcare_crt_get_option( 'duration', 15 );
 		$remind_before = $duration - 5;
 
-		$carts = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				"SELECT * FROM `{$table_sql}` WHERE reminded = 0 AND created_at < DATE_SUB(NOW(), INTERVAL %d MINUTE)",
-				$remind_before
-			)
+		$query = $wpdb->prepare(
+			'SELECT * FROM `' . $table . '` WHERE reminded = %d AND created_at < DATE_SUB(NOW(), INTERVAL %d MINUTE)',
+			0,
+			$remind_before
 		);
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$carts = $wpdb->get_results( $query );
 
 		if ( ! $carts ) {
 			return;
 		}
 
 		foreach ( $carts as $cart ) {
-			$user = get_user_by( 'ID', $cart->user_id );
+			$user = get_user_by( 'ID', (int) $cart->user_id );
+
 			if ( ! $user ) {
 				continue;
 			}
 
 			$this->send_reminder_email( $user, $cart );
 
-			// Mark as reminded.
-			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->update(
 				$table,
 				array( 'reminded' => 1 ),
-				array( 'id' => $cart->id ),
+				array( 'id' => (int) $cart->id ),
 				array( '%d' ),
 				array( '%d' )
 			);

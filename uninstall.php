@@ -1,8 +1,6 @@
 <?php
 /**
  * Uninstall Dealicious - Cart Reminder Timer for WooCommerce.
- *
- * @package Dealicious_Cart_Reminder_Timer
  */
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
@@ -11,7 +9,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 global $wpdb;
 
-$option_names = array(
+// Prefixed option names
+$dealcare_crt_option_names = array(
 	'dealcare_crt_duration',
 	'dealcare_crt_show_on',
 	'dealcare_crt_position',
@@ -29,13 +28,18 @@ $option_names = array(
 	'dealcare_crt_enable_email',
 );
 
-foreach ( $option_names as $option_name ) {
-	delete_option( $option_name );
-	delete_site_option( $option_name );
+// Delete options
+foreach ( $dealcare_crt_option_names as $dealcare_crt_option_name ) {
+	delete_option( $dealcare_crt_option_name );
+	delete_site_option( $dealcare_crt_option_name );
 }
 
+// Clear cron
 wp_clear_scheduled_hook( 'dealcare_crt_send_email_reminders' );
 
-$table_name = $wpdb->prefix . 'dealcare_crt_abandoned_carts';
-$table_name_sql = esc_sql( $table_name );
-$wpdb->query( "DROP TABLE IF EXISTS `{$table_name_sql}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.NotPrepared
+// Drop table safely
+$dealcare_crt_table_name = $wpdb->prefix . 'dealcare_crt_abandoned_carts';
+$dealcare_crt_table_name = esc_sql( $dealcare_crt_table_name );
+
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared
+$wpdb->query( 'DROP TABLE IF EXISTS `' . $dealcare_crt_table_name . '`' );

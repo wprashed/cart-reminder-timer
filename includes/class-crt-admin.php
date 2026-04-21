@@ -103,9 +103,11 @@ class DEALCARE_CRT_Admin {
 		}
 
 		if (
-			'POST' === strtoupper( $_SERVER['REQUEST_METHOD'] ?? '' ) &&
 			isset( $_POST['dealcare_crt_nonce'] ) &&
-			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['dealcare_crt_nonce'] ) ), 'dealcare_crt_save_settings' )
+			wp_verify_nonce(
+				sanitize_text_field( wp_unslash( $_POST['dealcare_crt_nonce'] ) ),
+				'dealcare_crt_save_settings'
+			)
 		) {
 			$this->save_settings();
 		}
